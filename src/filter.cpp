@@ -83,6 +83,11 @@ void filter(
     // transform to camera frame
     const Eigen::Vector3f pt_C = P_CL * pt_L;
 
+    if (pt_C.z() < 0) {
+      // behind camera
+      continue;
+    }
+
     // project into image plane
     std::vector<cv::Point2f> out_pt;
     cv::projectPoints(
