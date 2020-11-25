@@ -120,7 +120,7 @@ void PclSegComponent::cb_pcl_(sensor_msgs::msg::PointCloud2::UniquePtr msg)
 
   pImpl->pcl_queue_.push_back(std::move(msg));
 
-  if (pImpl->pcl_queue_.size() > 500) {
+  if (pImpl->pcl_queue_.size() > 2000) {
     RCLCPP_WARN_THROTTLE(
       get_logger(), *get_clock(), 1000, "PCLs accumulating (n=%d)", pImpl->pcl_queue_.size());
   }
@@ -141,7 +141,7 @@ void PclSegComponent::cb_img_(sensor_msgs::msg::Image::UniquePtr msg)
 
   pImpl->img_queue_.push_back(std::move(msg));
 
-  if (pImpl->img_queue_.size() > 500) {
+  if (pImpl->img_queue_.size() > 2000) {
     RCLCPP_WARN_THROTTLE(
       get_logger(), *get_clock(), 1000, "Images accumulating (n=%d)", pImpl->img_queue_.size());
   }
@@ -161,8 +161,7 @@ void PclSegComponent::work()
     }
 
     if (!pImpl->calib_received_) {
-      auto clock = get_clock();
-      RCLCPP_WARN_THROTTLE(get_logger(), *clock, 1000, "Waiting for calibration");
+      RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 1000, "Waiting for calibration");
       continue;
     }
 
@@ -182,8 +181,8 @@ void PclSegComponent::work()
     rclcpp::Time pcl_t(pcl->header.stamp);
 
     // discard non-relevant images
-    while (pImpl->img_queue_.size() > 2 &&
-      rclcpp::Time(pImpl->img_queue_[1]->header.stamp) < pcl_t)
+    while (pImpl->img_queue_.size() >= 2 &&
+      rclcpp::Time(pImpl->img_queue_[1]->header.stamp) <= pcl_t)
     {
       pImpl->img_queue_.pop_front();
     }
