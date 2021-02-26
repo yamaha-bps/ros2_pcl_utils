@@ -2,7 +2,6 @@
 
 #include "filter.hpp"
 
-#include <opencv2/calib3d.hpp>
 #include <sensor_msgs/image_encodings.hpp>
 
 #include <algorithm>
@@ -17,7 +16,7 @@ namespace bps
 void filter(
   const sensor_msgs::msg::Image & img,
   const bps_msgs::msg::MonoCalibration & calib,
-  const std::unordered_set<uint8_t> & good_idx,
+  const std::unordered_set<uint8_t> & good_labels,
   const Sophus::SE3f & P_CL,
   sensor_msgs::msg::PointCloud2 & pcl
 )
@@ -56,11 +55,8 @@ void filter(
     intensity_idx = std::distance(pcl.fields.begin(), it);
   }
 
-  cv::Mat CM = (cv::Mat_<double>(3, 3) << calib.fx, 0, calib.cx, 0, calib.fy, calib.cy, 0, 0, 1);
-  cv::Mat D = (cv::Mat_<double>(1, 5) << calib.k1, calib.k2, calib.p1, calib.p2, calib.k3);
-
   // loop through the pointcloud and keep points that either have negative intensity
-  // or that project to "good pixels"
+  // or that project to pixels with "good labels"
   auto first = pcl.data.begin();  // inserting iterator
   for (auto it = first; it < pcl.data.end(); it += pcl.point_step) {
     uint8_t * ptr = &*it;
@@ -80,53 +76,36 @@ void filter(
       *reinterpret_cast<float *>(ptr + pcl.fields[1].offset),
       *reinterpret_cast<float *>(ptr + pcl.fields[2].offset)
     };
-    // transform to camera frame
-    const Eigen::Vector3f pt_C = P_CL * pt_L;
 
-    if (pt_C.z() < 0) {
-      // behind camera
-      continue;
+    const Eigen::Vector3f pt_C = P_CL * pt_L;
+    if (pt_C.z() <= 0) {
+      continue;  // behind camera
     }
 
-    // project into image plane
-    std::vector<cv::Point2f> out_pt;
-    cv::projectPoints(
-      std::vector<cv::Point3f>{cv::Point3f{pt_C.x(), pt_C.y(), pt_C.z()}},
-      cv::Vec3f::zeros(),
-      cv::Vec3f::zeros(),
-      CM,
-      D,
-      out_pt
-    );
+    const Eigen::Vector2f uv = cameraProject(pt_C, calib);
 
-    // check that all bounding pixels are "good pixels"
-    const auto xdn = std::lround(std::floor(out_pt[0].x));
-    const auto xup = std::lround(std::ceil(out_pt[0].x));
+    // check closest pixel
+    const auto x = std::lround(uv(0));
+    const auto y = std::lround(uv(1));
 
-    const auto ydn = std::lround(std::floor(out_pt[0].y));
-    const auto yup = std::lround(std::ceil(out_pt[0].y));
-
-    if (xdn < 0 || xup >= img.width || ydn < 0 || yup >= img.height) {
+    if (x < 0 || x >= img.width || y < 0 || y >= img.height) {
       // lidar point not visible in image, do not copy
       continue;
     }
 
-    // check all four surrounding pixels, do not copy if one is bad
-    if (good_idx.find(img.data[ydn * img.step + xdn]) == good_idx.end()) {
-      continue;
-    }
-    if (good_idx.find(img.data[ydn * img.step + xup]) == good_idx.end()) {
-      continue;
-    }
-    if (good_idx.find(img.data[yup * img.step + xdn]) == good_idx.end()) {
-      continue;
-    }
-    if (good_idx.find(img.data[yup * img.step + xup]) == good_idx.end()) {
-      continue;
+    // check label,
+    const auto px_label = img.data[y * img.step + x];
+    bool keep_point{false};
+    for (const auto idx : good_labels) {
+      if (idx == px_label) {
+        keep_point = true;
+        break;
+      }
     }
 
-    // all pixels are in the good set, keep it!
-    first = std::copy(it, it + pcl.point_step, first);
+    if (keep_point) {
+      first = std::copy(it, it + pcl.point_step, first);
+    }
   }
 
   // discard remaining points
