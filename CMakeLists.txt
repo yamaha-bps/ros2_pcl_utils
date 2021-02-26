@@ -13,7 +13,6 @@ find_package(tf2_ros REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
 
 find_package(Eigen3 3.3 REQUIRED)
-find_package(OpenCV 4.2 REQUIRED)
 
 add_library(pcl_seg_component SHARED
   src/filter.cpp
@@ -23,8 +22,6 @@ target_include_directories(pcl_seg_component
 PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-PRIVATE
-  ${OpenCV_INCLUDE_DIRS}
 )
 ament_target_dependencies(pcl_seg_component
   bps_library
@@ -33,9 +30,6 @@ ament_target_dependencies(pcl_seg_component
   rclcpp
   rclcpp_components
   tf2_ros
-)
-target_link_libraries(pcl_seg_component
-  ${OpenCV_LIBRARIES}
 )
 target_compile_options(pcl_seg_component
 PRIVATE
@@ -85,6 +79,11 @@ install(TARGETS
   pcl_seg_node
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}/
 )
 
 # Install directiories
