@@ -1,7 +1,7 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
+#ifndef BPS_PCL_UTILS__PCL_SEG_COMPONENT_HPP_
+#define BPS_PCL_UTILS__PCL_SEG_COMPONENT_HPP_
 
-#ifndef PCL_SEG__PCL_SEG_COMPONENT_HPP_
-#define PCL_SEG__PCL_SEG_COMPONENT_HPP_
 
 #include <boost/circular_buffer.hpp>
 
@@ -47,4 +47,4 @@ private:
 
 }  // namespace bps
 
-#endif  // PCL_SEG__PCL_SEG_COMPONENT_HPP_
+#endif  // BPS_PCL_UTILS__PCL_SEG_COMPONENT_HPP_

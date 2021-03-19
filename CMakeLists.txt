@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(pcl_seg)
+project(bps_pcl_utils)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -9,13 +9,35 @@ find_package(bps_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(Sophus REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
 
 find_package(Eigen3 3.3 REQUIRED)
 
-add_library(pcl_seg_component SHARED
+add_library(pcl_utils SHARED
   src/filter.cpp
+  src/feature.cpp
+)
+target_include_directories(pcl_utils
+PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+ament_target_dependencies(pcl_utils
+  bps_msgs
+  sensor_msgs
+)
+target_link_libraries(pcl_utils
+  Sophus::Sophus
+  Eigen3::Eigen
+)
+target_compile_options(pcl_utils
+PRIVATE
+  -Wall -Wextra -Wpedantic -Werror
+)
+
+add_library(pcl_seg_component SHARED
   src/pcl_seg_component.cpp
 )
 target_include_directories(pcl_seg_component
@@ -24,19 +46,46 @@ PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 ament_target_dependencies(pcl_seg_component
-  bps_library
-  bps_msgs
-  Eigen3
   rclcpp
   rclcpp_components
+  bps_library
   tf2_ros
+)
+target_link_libraries(pcl_seg_component
+  pcl_utils
 )
 target_compile_options(pcl_seg_component
 PRIVATE
   -Wall -Wextra -Wpedantic -Werror
 )
-
 rclcpp_components_register_nodes(pcl_seg_component "bps::PclSegComponent")
+
+
+add_library(pcl_feature_component SHARED
+  src/feature.cpp
+  src/pcl_feature_component.cpp
+)
+target_include_directories(pcl_feature_component
+PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+PRIVATE
+  ${rclcpp_INCLUDE_DIRS}
+  ${rclcpp_components_INCLUDE_DIRS}
+)
+target_link_libraries(pcl_feature_component
+PUBLIC
+  ${rclcpp_LIBRARIES}
+  ${rclcpp_components_LIBRARIES}
+PRIVATE
+  bps_library::header_only
+  pcl_utils
+)
+target_compile_options(pcl_feature_component
+PRIVATE
+  -Wall -Wextra -Wpedantic -Werror
+)
+rclcpp_components_register_nodes(pcl_feature_component "bps::PclFeatureComponent")
 
 
 add_executable(pcl_seg_node
@@ -45,6 +94,14 @@ add_executable(pcl_seg_node
 target_link_libraries(pcl_seg_node
 PRIVATE
   pcl_seg_component
+)
+
+add_executable(pcl_feature_node
+  src/pcl_feature_node.cpp
+)
+target_link_libraries(pcl_feature_node
+PRIVATE
+  pcl_feature_component
 )
 
 
@@ -57,26 +114,25 @@ if(BUILD_TESTING)
   ament_add_gtest(test_filter
     test/test_filter.cpp
   )
-  target_include_directories(test_filter
-  PRIVATE
-    src/
+  target_link_libraries(test_filter pcl_utils)
+  ament_add_gtest(test_feature
+    test/test_feature.cpp
   )
-  target_link_libraries(test_filter
-    pcl_seg_component
-  )
+  target_link_libraries(test_feature pcl_utils)
+
 endif()
 
 
 # Libraries
 install(TARGETS
-  pcl_seg_component
+  pcl_utils pcl_seg_component pcl_feature_component
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib
 )
 
 # To run with ros2 run
 install(TARGETS
-  pcl_seg_node
+  pcl_seg_node pcl_feature_node
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME}
 )

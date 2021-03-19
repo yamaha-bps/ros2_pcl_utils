@@ -62,7 +62,7 @@ def generate_launch_description():
     launchdesc.add_action(Node(
         package='rviz2',
         executable='rviz2',
-        arguments=['-d', str(pathlib.Path(get_package_share_directory('pcl_seg')
+        arguments=['-d', str(pathlib.Path(get_package_share_directory('bps_pcl_utils')
                                           ) / 'launch' / 'pclseg_view.rviz')]
     ))
 

@@ -6,7 +6,7 @@
 
 #include <unordered_set>
 
-#include "filter.hpp"
+#include "bps_pcl_utils/filter.hpp"
 
 
 class ProjectionTest : public ::testing::Test

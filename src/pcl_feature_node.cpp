@@ -4,14 +4,14 @@
 
 #include <memory>
 
-#include "bps_pcl_utils/pcl_seg_component.hpp"
+#include "bps_pcl_utils/pcl_feature_component.hpp"
 
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
 
   auto opts = rclcpp::NodeOptions{}.use_intra_process_comms(false);
-  auto node = std::make_shared<bps::PclSegComponent>(opts);
+  auto node = std::make_shared<bps::PclFeatureComponent>(opts);
 
   rclcpp::executors::SingleThreadedExecutor exec{};
   exec.add_node(node);
