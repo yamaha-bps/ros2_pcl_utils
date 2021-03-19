@@ -1,11 +1,12 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
 
-#include "pcl_seg/pcl_seg_component.hpp"
+#include "bps_pcl_utils/pcl_seg_component.hpp"
 
 #include <boost/circular_buffer.hpp>
 #include <bps_library/msg_utils.hpp>
 #include <bps_library/fmt.hpp>
 #include <fmt/format.h>
+#include <rclcpp_components/register_node_macro.hpp>
 #include <sophus/se3.hpp>
 
 #include <condition_variable>
@@ -19,7 +20,7 @@
 #include <utility>
 #include <vector>
 
-#include "filter.hpp"
+#include "bps_pcl_utils/filter.hpp"
 
 namespace bps
 {
@@ -277,3 +278,5 @@ void PclSegComponent::work()
 }
 
 }  // namespace bps
+
+RCLCPP_COMPONENTS_REGISTER_NODE(bps::PclSegComponent)

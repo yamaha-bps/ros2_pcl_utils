@@ -1,7 +1,7 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
 
-#ifndef FILTER_HPP_
-#define FILTER_HPP_
+#ifndef BPS_PCL_UTILS__FILTER_HPP_
+#define BPS_PCL_UTILS__FILTER_HPP_
 
 #include <bps_msgs/msg/mono_calibration.hpp>
 #include <sensor_msgs/msg/image.hpp>
@@ -63,4 +63,4 @@ void filter(
 
 }  // namespace bps
 
-#endif  // FILTER_HPP_
+#endif  // BPS_PCL_UTILS__FILTER_HPP_
