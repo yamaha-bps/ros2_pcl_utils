@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(ament_cmake REQUIRED)
 find_package(bps_library REQUIRED)
 find_package(bps_msgs REQUIRED)
+find_package(OpenCV REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
@@ -14,6 +15,7 @@ find_package(tf2_ros REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
 
 find_package(Eigen3 3.3 REQUIRED)
+
 
 add_library(pcl_utils SHARED
   src/filter.cpp
@@ -87,6 +89,32 @@ PRIVATE
 )
 rclcpp_components_register_nodes(pcl_feature_component "bps::PclFeatureComponent")
 
+add_library(pcl_image_overlay_component SHARED
+  src/feature.cpp
+  src/pcl_image_overlay_component.cpp
+)
+target_include_directories(pcl_image_overlay_component
+PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+  ${OpenCV_INCLUDE_DIRS}
+)
+ament_target_dependencies(pcl_image_overlay_component
+  bps_library
+  tf2_ros
+  rclcpp
+  rclcpp_components
+)
+target_link_libraries(pcl_image_overlay_component
+  ${OpenCV_LIBRARIES}
+)
+target_compile_options(pcl_image_overlay_component
+PRIVATE
+  -Wall -Wextra -Wpedantic -Werror
+)
+rclcpp_components_register_nodes(pcl_image_overlay_component "bps::PclImageOverlayComponent")
+
+
 
 add_executable(pcl_seg_node
   src/pcl_seg_node.cpp
@@ -102,6 +130,14 @@ add_executable(pcl_feature_node
 target_link_libraries(pcl_feature_node
 PRIVATE
   pcl_feature_component
+)
+
+add_executable(pcl_image_overlay_node
+  src/pcl_image_overlay_node.cpp
+)
+target_link_libraries(pcl_image_overlay_node
+PRIVATE
+  pcl_image_overlay_component
 )
 
 
@@ -125,14 +161,14 @@ endif()
 
 # Libraries
 install(TARGETS
-  pcl_utils pcl_seg_component pcl_feature_component
+  pcl_utils pcl_seg_component pcl_feature_component pcl_image_overlay_component
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib
 )
 
 # To run with ros2 run
 install(TARGETS
-  pcl_seg_node pcl_feature_node
+  pcl_seg_node pcl_feature_node pcl_image_overlay_node
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME}
 )
