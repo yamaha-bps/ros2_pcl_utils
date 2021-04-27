@@ -8,6 +8,9 @@
 #include <utility>
 #include <vector>
 
+#include "pcl_iterator.hpp"
+
+
 namespace bps
 {
 
@@ -16,70 +19,6 @@ struct ScanInfo
   uint32_t idx = 0;  // index in scan
   bool ok = false;   // if eligible to be a feature
   float cvalue = 0;  // estimate of smoothness
-};
-
-
-struct PclIterator
-{
-  PclIterator(uint32_t pt_step, uint8_t const * data)
-  : pt_step_(pt_step), data_ptr_(data)
-  {}
-
-  explicit PclIterator(const sensor_msgs::msg::PointCloud2 & msg)
-  : pt_step_(msg.point_step),
-    data_ptr_(msg.data.data())
-  {
-    if (msg.fields[0].name != "x" || msg.fields[0].offset != 0 ||
-      msg.fields[0].datatype != sensor_msgs::msg::PointField::FLOAT32)
-    {
-      throw std::runtime_error("x field not proper");
-    }
-    if (msg.fields[1].name != "y" || msg.fields[1].offset != 4 ||
-      msg.fields[1].datatype != sensor_msgs::msg::PointField::FLOAT32)
-    {
-      throw std::runtime_error("y field not proper");
-    }
-    if (msg.fields[2].name != "z" || msg.fields[2].offset != 8 ||
-      msg.fields[2].datatype != sensor_msgs::msg::PointField::FLOAT32)
-    {
-      throw std::runtime_error("z field not proper");
-    }
-    if (msg.fields[3].name != "intensity" || msg.fields[3].offset != 12 ||
-      msg.fields[3].datatype != sensor_msgs::msg::PointField::FLOAT32)
-    {
-      throw std::runtime_error("intensity field not proper");
-    }
-  }
-
-  Eigen::Map<const Eigen::Vector3f> operator*() const
-  {
-    return Eigen::Map<const Eigen::Vector3f>(reinterpret_cast<const float *>(data_ptr_));
-  }
-
-  float intensity() const
-  {
-    return *reinterpret_cast<const float *>(data_ptr_ + 12);
-  }
-
-  PclIterator & operator++()
-  {
-    data_ptr_ += pt_step_;
-    return *this;
-  }
-
-  PclIterator & operator+=(std::size_t i)
-  {
-    data_ptr_ += i * pt_step_;
-    return *this;
-  }
-
-  PclIterator operator+(std::size_t i) const
-  {
-    return PclIterator(pt_step_, data_ptr_ + i * pt_step_);
-  }
-
-  uint32_t pt_step_;
-  uint8_t const * data_ptr_;
 };
 
 
