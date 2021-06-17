@@ -1,21 +1,25 @@
 cmake_minimum_required(VERSION 3.15)
-project(ros2_pcl_utils)
+project(ros2_pcl_utils VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+option(BUILD_TESTING "Build tests." OFF)
+
 find_package(ament_cmake REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(Sophus REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(Sophus REQUIRED)
 find_package(tf2_ros REQUIRED)
-find_package(eigen3_cmake_module REQUIRED)
 
-find_package(Eigen3 3.3 REQUIRED)
+# ---------------------------------------------------------------------------------------
+# TARGETS
+# ---------------------------------------------------------------------------------------
 
+# Library
 
 add_library(pcl_utils SHARED
   src/filter.cpp
@@ -38,6 +42,8 @@ PRIVATE
   -Wall -Wextra -Wpedantic -Werror
 )
 
+# Components
+
 add_library(pcl_seg_component SHARED
   src/pcl_seg_component.cpp
 )
@@ -58,7 +64,7 @@ target_compile_options(pcl_seg_component
 PRIVATE
   -Wall -Wextra -Wpedantic -Werror
 )
-rclcpp_components_register_nodes(pcl_seg_component "bps::PclSegComponent")
+rclcpp_components_register_nodes(pcl_seg_component "cbr::PclSegComponent")
 
 
 add_library(pcl_feature_component SHARED
@@ -84,7 +90,8 @@ target_compile_options(pcl_feature_component
 PRIVATE
   -Wall -Wextra -Wpedantic -Werror
 )
-rclcpp_components_register_nodes(pcl_feature_component "bps::PclFeatureComponent")
+rclcpp_components_register_nodes(pcl_feature_component "cbr::PclFeatureComponent")
+
 
 add_library(pcl_image_overlay_component SHARED
   src/pcl_image_overlay_component.cpp
@@ -108,9 +115,9 @@ target_compile_options(pcl_image_overlay_component
 PRIVATE
   -Wall -Wextra -Wpedantic -Werror
 )
-rclcpp_components_register_nodes(pcl_image_overlay_component "bps::PclImageOverlayComponent")
+rclcpp_components_register_nodes(pcl_image_overlay_component "cbr::PclImageOverlayComponent")
 
-
+# Nodes
 
 add_executable(pcl_seg_node
   src/pcl_seg_node.cpp
@@ -136,24 +143,9 @@ PRIVATE
   pcl_image_overlay_component
 )
 
-
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  set(ament_cmake_copyright_FOUND TRUE)
-  ament_lint_auto_find_test_dependencies()
-
-  find_package(ament_cmake_gtest REQUIRED)
-  ament_add_gtest(test_filter
-    test/test_filter.cpp
-  )
-  target_link_libraries(test_filter pcl_utils)
-  ament_add_gtest(test_feature
-    test/test_feature.cpp
-  )
-  target_link_libraries(test_feature pcl_utils)
-
-endif()
-
+# ---------------------------------------------------------------------------------------
+# INSTALLATION
+# ---------------------------------------------------------------------------------------
 
 # Libraries
 install(TARGETS
@@ -180,4 +172,29 @@ install(
   DESTINATION include
 )
 
+# ---------------------------------------------------------------------------------------
+# TESTING
+# ---------------------------------------------------------------------------------------
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  set(ament_cmake_copyright_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
+
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_filter
+    test/test_filter.cpp
+  )
+  target_link_libraries(test_filter pcl_utils)
+  ament_add_gtest(test_feature
+    test/test_feature.cpp
+  )
+  target_link_libraries(test_feature pcl_utils)
+endif()
+
+# ---------------------------------------------------------------------------------------
+# CMAKE CONFIGURATION
+# ---------------------------------------------------------------------------------------
+
 ament_package()
+
