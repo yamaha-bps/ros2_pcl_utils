@@ -1,6 +1,6 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
-#ifndef ROS2_PCL_UTILS__PCL_SEG_COMPONENT_HPP_
-#define ROS2_PCL_UTILS__PCL_SEG_COMPONENT_HPP_
+#ifndef PCL_UTILS__PCL_SEG_COMPONENT_HPP_
+#define PCL_UTILS__PCL_SEG_COMPONENT_HPP_
 
 #include <boost/circular_buffer.hpp>
 
@@ -13,11 +13,13 @@
 
 #include <memory>
 
-namespace cbr {
+namespace cbr
+{
 
-class PclSegComponent : public rclcpp::Node {
+class PclSegComponent : public rclcpp::Node
+{
 public:
-  explicit PclSegComponent(const rclcpp::NodeOptions &opts);
+  explicit PclSegComponent(const rclcpp::NodeOptions & opts);
   ~PclSegComponent();
 
 private:
@@ -42,6 +44,6 @@ private:
   std::unique_ptr<Impl> pImpl;
 };
 
-} // namespace cbr
+}  // namespace cbr
 
-#endif // ROS2_PCL_UTILS__PCL_SEG_COMPONENT_HPP_
+#endif  // PCL_UTILS__PCL_SEG_COMPONENT_HPP_

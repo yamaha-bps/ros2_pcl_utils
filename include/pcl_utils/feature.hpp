@@ -1,6 +1,6 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
-#ifndef ROS2_PCL_UTILS__FEATURE_HPP_
-#define ROS2_PCL_UTILS__FEATURE_HPP_
+#ifndef PCL_UTILS__FEATURE_HPP_
+#define PCL_UTILS__FEATURE_HPP_
 
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
@@ -8,9 +8,11 @@
 #include <limits>
 #include <utility>
 
-namespace cbr {
+namespace cbr
+{
 
-struct PclFeatureParams {
+struct PclFeatureParams
+{
   // Size of window for feature detection on each side
   uint32_t window{5};
 
@@ -58,10 +60,11 @@ struct PclFeatureParams {
  * @return edge and planar feature pointclouds
  */
 std::pair<sensor_msgs::msg::PointCloud2::UniquePtr,
-          sensor_msgs::msg::PointCloud2::UniquePtr>
-pcl_features(const sensor_msgs::msg::PointCloud2 &msg,
-             const PclFeatureParams &prm);
+  sensor_msgs::msg::PointCloud2::UniquePtr>
+pcl_features(
+  const sensor_msgs::msg::PointCloud2 & msg,
+  const PclFeatureParams & prm);
 
-} // namespace cbr
+}  // namespace cbr
 
-#endif // ROS2_PCL_UTILS__FEATURE_HPP_
+#endif  // PCL_UTILS__FEATURE_HPP_
