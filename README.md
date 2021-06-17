@@ -1,17 +1,20 @@
-# ```bps_pcl_utils```
+# ```ros2_pcl_utils```
 
-Algorithms assume pointclouds with XYZI structure.
+ROS2 nodes for pointcloud manipulation:
+
+* ```PclFeatureComponent```: Extract edge and planar features
+* ```PclSegComponent```: Filter a pointcloud with respect to a segmentation image
+* ```PclImageOverlayComponent```: Project a pointcloud onto an image
+
+The nodes assume that the incoming pointclouds have the XYZI structure.
 
 Points with negative intensity are assumed to be non-returns.
-
-
-[[_TOC_]]
 
 ## ```PclFeatureComponent```
 
 Extracts edge and planar features from a pointcloud.
 
-The incoming pointcloud must consist of consecutive laser points from the same laser,
+NOTE The incoming pointcloud must consist of consecutive laser points from the same laser,
 or the algorithms will not work properly.
 
 Features are extracted by
@@ -102,7 +105,7 @@ Non-returns are re-published.
 
   Must be an image of type MONO8 where the pixel value is the segmentation class.
 
- - ```calibration ``` - ```bps_msgs/msg/MonoCalibration```
+ - ```calibration ``` - ```sensor_msgs/msg/CameraInfo```
 
 ### Publishes to
 
@@ -129,7 +132,7 @@ Point colors are determined by the distance from the camera.
 
   Must be an image of type RGB8
 
- - ```calibration ``` - ```bps_msgs/msg/MonoCalibration```
+ - ```calibration ``` - ```sensor_msgs/msg/CameraInfo```
 
 ### Publishes to
 
