@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "ros2_pcl_utils/feature.hpp"
+#include "pcl_utils/feature.hpp"
 
 TEST(PclFeature, Corner)
 {

@@ -1,6 +1,6 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
 
-#include "ros2_pcl_utils/pcl_feature_component.hpp"
+#include "pcl_utils/pcl_feature_component.hpp"
 
 #include <rclcpp_components/register_node_macro.hpp>
 

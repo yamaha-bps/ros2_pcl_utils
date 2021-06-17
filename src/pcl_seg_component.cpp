@@ -1,6 +1,6 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
 
-#include "ros2_pcl_utils/pcl_seg_component.hpp"
+#include "pcl_utils/pcl_seg_component.hpp"
 
 #include <boost/circular_buffer.hpp>
 #include <fmt/format.h>

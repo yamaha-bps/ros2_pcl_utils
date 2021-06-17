@@ -4,7 +4,7 @@
 
 #include <memory>
 
-#include "ros2_pcl_utils/pcl_feature_component.hpp"
+#include "pcl_utils/pcl_feature_component.hpp"
 
 int main(int argc, char ** argv)
 {

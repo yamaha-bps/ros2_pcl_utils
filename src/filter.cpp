@@ -1,6 +1,6 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
 
-#include "ros2_pcl_utils/filter.hpp"
+#include "pcl_utils/filter.hpp"
 
 #include <sensor_msgs/image_encodings.hpp>
 
