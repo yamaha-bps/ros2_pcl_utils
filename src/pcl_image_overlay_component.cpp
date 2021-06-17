@@ -1,6 +1,6 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
 
-#include "ros2_pcl_utils/pcl_image_overlay_component.hpp"
+#include "pcl_utils/pcl_image_overlay_component.hpp"
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
