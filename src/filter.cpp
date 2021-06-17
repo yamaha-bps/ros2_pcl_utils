@@ -1,6 +1,6 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
 
-#include "bps_pcl_utils/filter.hpp"
+#include "ros2_pcl_utils/filter.hpp"
 
 #include <sensor_msgs/image_encodings.hpp>
 
@@ -10,12 +10,12 @@
 #include <unordered_set>
 #include <vector>
 
-namespace bps
+namespace cbr
 {
 
 void filter(
   const sensor_msgs::msg::Image & img,
-  const bps_msgs::msg::MonoCalibration & calib,
+  const sensor_msgs::msg::CameraInfo & cam,
   const std::unordered_set<uint8_t> & good_labels,
   const Sophus::SE3f & P_CL,
   sensor_msgs::msg::PointCloud2 & pcl
@@ -82,7 +82,7 @@ void filter(
       continue;  // behind camera
     }
 
-    const Eigen::Vector2f uv = cameraProject(pt_C, calib);
+    const Eigen::Vector2f uv = cameraProject(pt_C, cam);
 
     // check closest pixel
     const auto x = std::lround(uv(0));
@@ -113,4 +113,4 @@ void filter(
   pcl.width = pcl.data.size() / pcl.point_step;
 }
 
-}  // namespace bps
+}  // namespace cbr

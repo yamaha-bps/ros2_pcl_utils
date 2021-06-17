@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "bps_pcl_utils/feature.hpp"
+#include "ros2_pcl_utils/feature.hpp"
 
 TEST(PclFeature, Corner)
 {
@@ -52,7 +52,7 @@ TEST(PclFeature, Corner)
   msg.height = 1;
   msg.width = msg.data.size() / msg.point_step;
 
-  bps::PclFeatureParams prm;
+  cbr::PclFeatureParams prm;
   prm.window = 5;
   prm.ang_disc_thresh = M_PI;
   prm.rel_disc_thresh = 0.1;
@@ -65,7 +65,7 @@ TEST(PclFeature, Corner)
 
   // on regular cloud
   {
-    auto [edges, planar] = bps::pcl_features(msg, prm);
+    auto [edges, planar] = cbr::pcl_features(msg, prm);
     ASSERT_EQ(edges->width, 1u);
     ASSERT_GE(planar->width, 5u);
     for (auto i = 0u; i != 16; ++i) {
@@ -83,7 +83,7 @@ TEST(PclFeature, Corner)
         msg_rev.data.begin() + msg.data.size() - (1 + i) * msg.point_step
       );
     }
-    auto [edges, planar] = bps::pcl_features(msg_rev, prm);
+    auto [edges, planar] = cbr::pcl_features(msg_rev, prm);
     ASSERT_EQ(edges->width, 1u);
     ASSERT_GE(planar->width, 5u);
     for (auto i = 0u; i != 16; ++i) {

@@ -1,6 +1,6 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
-#ifndef BPS_PCL_UTILS__PCL_FEATURE_COMPONENT_HPP_
-#define BPS_PCL_UTILS__PCL_FEATURE_COMPONENT_HPP_
+#ifndef ROS2_PCL_UTILS__PCL_FEATURE_COMPONENT_HPP_
+#define ROS2_PCL_UTILS__PCL_FEATURE_COMPONENT_HPP_
 
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
@@ -9,13 +9,11 @@
 
 #include "feature.hpp"
 
-namespace bps
-{
+namespace cbr {
 
-class PclFeatureComponent : public rclcpp::Node
-{
+class PclFeatureComponent : public rclcpp::Node {
 public:
-  explicit PclFeatureComponent(const rclcpp::NodeOptions & opts);
+  explicit PclFeatureComponent(const rclcpp::NodeOptions &opts);
   ~PclFeatureComponent();
 
 private:
@@ -28,6 +26,6 @@ private:
   PclFeatureParams prm_;
 };
 
-}  // namespace bps
+} // namespace cbr
 
-#endif  // BPS_PCL_UTILS__PCL_FEATURE_COMPONENT_HPP_
+#endif // ROS2_PCL_UTILS__PCL_FEATURE_COMPONENT_HPP_

@@ -1,6 +1,6 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
-#ifndef BPS_PCL_UTILS__FEATURE_HPP_
-#define BPS_PCL_UTILS__FEATURE_HPP_
+#ifndef ROS2_PCL_UTILS__FEATURE_HPP_
+#define ROS2_PCL_UTILS__FEATURE_HPP_
 
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
@@ -8,11 +8,9 @@
 #include <limits>
 #include <utility>
 
-namespace bps
-{
+namespace cbr {
 
-struct PclFeatureParams
-{
+struct PclFeatureParams {
   // Size of window for feature detection on each side
   uint32_t window{5};
 
@@ -22,8 +20,8 @@ struct PclFeatureParams
   float ang_disc_thresh{M_PI};
 
   // Relative distance discontinuity threshold
-  // Points in window on the far side of a relative discontinuity are marked as invalid
-  // since they may be occluded by a small sensor movement
+  // Points in window on the far side of a relative discontinuity are marked as
+  // invalid since they may be occluded by a small sensor movement
   float rel_disc_thresh{std::numeric_limits<float>::max()};
 
   // Max angle of ray w.r.t. Y-Z plane [rad] (between 0 and PI / 2)
@@ -48,7 +46,6 @@ struct PclFeatureParams
   float edge_thresh{1e-2};
 };
 
-
 /**
  * @brief Extract edge and plane features from pointcloud
  *
@@ -60,9 +57,11 @@ struct PclFeatureParams
  * @param prm parameters
  * @return edge and planar feature pointclouds
  */
-std::pair<sensor_msgs::msg::PointCloud2::UniquePtr, sensor_msgs::msg::PointCloud2::UniquePtr>
-pcl_features(const sensor_msgs::msg::PointCloud2 & msg, const PclFeatureParams & prm);
+std::pair<sensor_msgs::msg::PointCloud2::UniquePtr,
+          sensor_msgs::msg::PointCloud2::UniquePtr>
+pcl_features(const sensor_msgs::msg::PointCloud2 &msg,
+             const PclFeatureParams &prm);
 
-}  // namespace bps
+} // namespace cbr
 
-#endif  // BPS_PCL_UTILS__FEATURE_HPP_
+#endif // ROS2_PCL_UTILS__FEATURE_HPP_
