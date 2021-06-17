@@ -4,7 +4,6 @@ project(pcl_utils VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-
 find_package(ament_cmake REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
@@ -43,34 +42,34 @@ PRIVATE
 
 # Components
 
-add_library(pcl_seg_component SHARED
+add_library(seg_component SHARED
   src/pcl_seg_component.cpp
 )
-target_include_directories(pcl_seg_component
+target_include_directories(seg_component
 PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
-ament_target_dependencies(pcl_seg_component
+ament_target_dependencies(seg_component
   rclcpp
   rclcpp_components
   tf2_ros
 )
-target_link_libraries(pcl_seg_component
+target_link_libraries(seg_component
   pcl_utils
 )
-target_compile_options(pcl_seg_component
+target_compile_options(seg_component
 PRIVATE
   -Wall -Wextra -Wpedantic -Werror
 )
-rclcpp_components_register_nodes(pcl_seg_component "cbr::PclSegComponent")
+rclcpp_components_register_nodes(seg_component "cbr::PclSegComponent")
 
 
-add_library(pcl_feature_component SHARED
+add_library(feature_component SHARED
   src/feature.cpp
   src/pcl_feature_component.cpp
 )
-target_include_directories(pcl_feature_component
+target_include_directories(feature_component
 PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
@@ -78,68 +77,68 @@ PRIVATE
   ${rclcpp_INCLUDE_DIRS}
   ${rclcpp_components_INCLUDE_DIRS}
 )
-target_link_libraries(pcl_feature_component
+target_link_libraries(feature_component
 PUBLIC
   ${rclcpp_LIBRARIES}
   ${rclcpp_components_LIBRARIES}
 PRIVATE
   pcl_utils
 )
-target_compile_options(pcl_feature_component
+target_compile_options(feature_component
 PRIVATE
   -Wall -Wextra -Wpedantic -Werror
 )
-rclcpp_components_register_nodes(pcl_feature_component "cbr::PclFeatureComponent")
+rclcpp_components_register_nodes(feature_component "cbr::PclFeatureComponent")
 
 
-add_library(pcl_image_overlay_component SHARED
+add_library(image_overlay_component SHARED
   src/pcl_image_overlay_component.cpp
 )
-target_include_directories(pcl_image_overlay_component
+target_include_directories(image_overlay_component
 PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(pcl_image_overlay_component
+ament_target_dependencies(image_overlay_component
   tf2_ros
   rclcpp
   rclcpp_components
 )
-target_link_libraries(pcl_image_overlay_component
+target_link_libraries(image_overlay_component
   ${OpenCV_LIBRARIES}
   pcl_utils
 )
-target_compile_options(pcl_image_overlay_component
+target_compile_options(image_overlay_component
 PRIVATE
   -Wall -Wextra -Wpedantic -Werror
 )
-rclcpp_components_register_nodes(pcl_image_overlay_component "cbr::PclImageOverlayComponent")
+rclcpp_components_register_nodes(image_overlay_component "cbr::PclImageOverlayComponent")
 
 # Nodes
 
-add_executable(pcl_seg_node
+add_executable(seg_node
   src/pcl_seg_node.cpp
 )
-target_link_libraries(pcl_seg_node
+target_link_libraries(seg_node
 PRIVATE
-  pcl_seg_component
+  seg_component
 )
 
-add_executable(pcl_feature_node
+add_executable(feature_node
   src/pcl_feature_node.cpp
 )
-target_link_libraries(pcl_feature_node
+target_link_libraries(feature_node
 PRIVATE
-  pcl_feature_component
+  feature_component
 )
 
-add_executable(pcl_image_overlay_node
+add_executable(image_overlay_node
   src/pcl_image_overlay_node.cpp
 )
-target_link_libraries(pcl_image_overlay_node
+target_link_libraries(image_overlay_node
 PRIVATE
-  pcl_image_overlay_component
+  image_overlay_component
 )
 
 # ---------------------------------------------------------------------------------------
@@ -148,21 +147,16 @@ PRIVATE
 
 # Libraries
 install(TARGETS
-  pcl_utils pcl_seg_component pcl_feature_component pcl_image_overlay_component
+  pcl_utils seg_component feature_component image_overlay_component
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib
 )
 
 # To run with ros2 run
 install(TARGETS
-  pcl_seg_node pcl_feature_node pcl_image_overlay_node
+  seg_node feature_node image_overlay_node
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME}
-)
-
-install(
-  DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME}/
 )
 
 # Install directiories
