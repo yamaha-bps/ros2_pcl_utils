@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.15)
-project(bps_pcl_utils)
+project(ros2_pcl_utils)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(ament_cmake REQUIRED)
-find_package(bps_library REQUIRED)
-find_package(bps_msgs REQUIRED)
+find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
@@ -25,14 +25,13 @@ target_include_directories(pcl_utils
 PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-)
-ament_target_dependencies(pcl_utils
-  bps_msgs
-  sensor_msgs
+  ${sensor_msgs_INCLUDE_DIRS}
 )
 target_link_libraries(pcl_utils
+PUBLIC
   Sophus::Sophus
   Eigen3::Eigen
+  ${sensor_msgs_LIBRARIES}
 )
 target_compile_options(pcl_utils
 PRIVATE
@@ -50,7 +49,6 @@ PUBLIC
 ament_target_dependencies(pcl_seg_component
   rclcpp
   rclcpp_components
-  bps_library
   tf2_ros
 )
 target_link_libraries(pcl_seg_component
@@ -80,7 +78,6 @@ PUBLIC
   ${rclcpp_LIBRARIES}
   ${rclcpp_components_LIBRARIES}
 PRIVATE
-  bps_library::header_only
   pcl_utils
 )
 target_compile_options(pcl_feature_component
@@ -90,7 +87,6 @@ PRIVATE
 rclcpp_components_register_nodes(pcl_feature_component "bps::PclFeatureComponent")
 
 add_library(pcl_image_overlay_component SHARED
-  src/feature.cpp
   src/pcl_image_overlay_component.cpp
 )
 target_include_directories(pcl_image_overlay_component
@@ -100,13 +96,13 @@ PUBLIC
   ${OpenCV_INCLUDE_DIRS}
 )
 ament_target_dependencies(pcl_image_overlay_component
-  bps_library
   tf2_ros
   rclcpp
   rclcpp_components
 )
 target_link_libraries(pcl_image_overlay_component
   ${OpenCV_LIBRARIES}
+  pcl_utils
 )
 target_compile_options(pcl_image_overlay_component
 PRIVATE

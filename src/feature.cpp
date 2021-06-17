@@ -1,6 +1,6 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
 
-#include "bps_pcl_utils/feature.hpp"
+#include "ros2_pcl_utils/feature.hpp"
 
 #include <Eigen/Core>
 
@@ -11,7 +11,7 @@
 #include "pcl_iterator.hpp"
 
 
-namespace bps
+namespace cbr
 {
 
 struct ScanInfo
@@ -236,4 +236,4 @@ pcl_features(const sensor_msgs::msg::PointCloud2 & msg, const PclFeatureParams &
   return {std::move(edges), std::move(planar)};
 }
 
-}  // namespace bps
+}  // namespace cbr

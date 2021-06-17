@@ -6,7 +6,7 @@
 
 #include <unordered_set>
 
-#include "bps_pcl_utils/filter.hpp"
+#include "ros2_pcl_utils/filter.hpp"
 
 
 class ProjectionTest : public ::testing::Test
@@ -14,15 +14,16 @@ class ProjectionTest : public ::testing::Test
 protected:
   void SetUp()
   {
-    calib.cx = 320.5;
-    calib.cy = 240.5;
-    calib.fx = 1;
-    calib.fy = 1;
-    calib.k1 = 0;
-    calib.k2 = 0;
-    calib.k3 = 0;
-    calib.p1 = 0;
-    calib.p2 = 0;
+    calib.k.fill(0);
+    calib.k[0] = 1;      // fx
+    calib.k[2] = 320.5;  // cx
+    calib.k[4] = 1;      // fy
+    calib.k[5] = 240.5;  // cy
+    calib.d[0] = 0;
+    calib.d[1] = 0;
+    calib.d[2] = 0;
+    calib.d[3] = 0;
+    calib.d[4] = 0;
 
     img.encoding = sensor_msgs::image_encodings::MONO8;
     img.height = 480;
@@ -102,7 +103,7 @@ protected:
   {
   }
 
-  bps_msgs::msg::MonoCalibration calib;
+  sensor_msgs::msg::CameraInfo calib;
   sensor_msgs::msg::Image img;
   sensor_msgs::msg::PointCloud2 pcl;
 };
@@ -110,7 +111,7 @@ protected:
 
 TEST_F(ProjectionTest, FirstQuadrant)
 {
-  bps::filter(img, calib, std::unordered_set<uint8_t>{1}, Sophus::SE3f{}, pcl);
+  cbr::filter(img, calib, std::unordered_set<uint8_t>{1}, Sophus::SE3f{}, pcl);
   ASSERT_EQ(pcl.data.size(), pcl.point_step);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 0), 1);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 4), 1);
@@ -119,7 +120,7 @@ TEST_F(ProjectionTest, FirstQuadrant)
 
 TEST_F(ProjectionTest, SecondQuadrant)
 {
-  bps::filter(img, calib, std::unordered_set<uint8_t>{2}, Sophus::SE3f{}, pcl);
+  cbr::filter(img, calib, std::unordered_set<uint8_t>{2}, Sophus::SE3f{}, pcl);
   ASSERT_EQ(pcl.data.size(), pcl.point_step);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 0), -1);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 4), 1);
@@ -128,7 +129,7 @@ TEST_F(ProjectionTest, SecondQuadrant)
 
 TEST_F(ProjectionTest, ThirdQuadrant)
 {
-  bps::filter(img, calib, std::unordered_set<uint8_t>{3}, Sophus::SE3f{}, pcl);
+  cbr::filter(img, calib, std::unordered_set<uint8_t>{3}, Sophus::SE3f{}, pcl);
   ASSERT_EQ(pcl.data.size(), pcl.point_step);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 0), -1);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 4), -1);
@@ -137,7 +138,7 @@ TEST_F(ProjectionTest, ThirdQuadrant)
 
 TEST_F(ProjectionTest, FourthQuadrant)
 {
-  bps::filter(img, calib, std::unordered_set<uint8_t>{4}, Sophus::SE3f{}, pcl);
+  cbr::filter(img, calib, std::unordered_set<uint8_t>{4}, Sophus::SE3f{}, pcl);
   ASSERT_EQ(pcl.data.size(), pcl.point_step);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 0), 1);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 4), -1);
@@ -147,7 +148,7 @@ TEST_F(ProjectionTest, FourthQuadrant)
 TEST_F(ProjectionTest, AllQuadrants)
 {
   auto copy = pcl.data;
-  bps::filter(img, calib, std::unordered_set<uint8_t>{1, 2, 3, 4}, Sophus::SE3f{}, pcl);
+  cbr::filter(img, calib, std::unordered_set<uint8_t>{1, 2, 3, 4}, Sophus::SE3f{}, pcl);
 
   ASSERT_EQ(copy.size(), pcl.data.size());
 

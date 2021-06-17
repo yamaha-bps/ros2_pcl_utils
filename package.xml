@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>bps_pcl_utils</name>
+  <name>ros2_pcl_utils</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="pettni@umich.edu">petter</maintainer>
-  <license>TODO: License declaration</license>
+  <description>ROS2 nodes for pointcloud manipulation</description>
+  <maintainer email="pettni@umich.edu">Petter Nilsson</maintainer>
+  <license>MIT License</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
@@ -18,7 +18,6 @@
   <build_depend>eigen</build_depend>
   <build_depend>tf2_ros</build_depend>
 
-  <depend>bps_msgs</depend>
   <depend>sensor_msgs</depend>
 
   <export>

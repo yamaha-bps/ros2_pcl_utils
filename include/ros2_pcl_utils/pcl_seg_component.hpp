@@ -1,26 +1,23 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
-#ifndef BPS_PCL_UTILS__PCL_SEG_COMPONENT_HPP_
-#define BPS_PCL_UTILS__PCL_SEG_COMPONENT_HPP_
-
+#ifndef ROS2_PCL_UTILS__PCL_SEG_COMPONENT_HPP_
+#define ROS2_PCL_UTILS__PCL_SEG_COMPONENT_HPP_
 
 #include <boost/circular_buffer.hpp>
 
-#include <bps_msgs/msg/stereo_calibration.hpp>
 #include <rclcpp/rclcpp.hpp>
-#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
 
 #include <memory>
 
-namespace bps
-{
+namespace cbr {
 
-class PclSegComponent : public rclcpp::Node
-{
+class PclSegComponent : public rclcpp::Node {
 public:
-  explicit PclSegComponent(const rclcpp::NodeOptions & opts);
+  explicit PclSegComponent(const rclcpp::NodeOptions &opts);
   ~PclSegComponent();
 
 private:
@@ -30,7 +27,7 @@ private:
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr sub_img_;
   void cb_img_(sensor_msgs::msg::Image::UniquePtr msg);
 
-  rclcpp::Subscription<bps_msgs::msg::MonoCalibration>::SharedPtr sub_calib_;
+  rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr sub_calib_;
 
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_pcl_;
 
@@ -45,6 +42,6 @@ private:
   std::unique_ptr<Impl> pImpl;
 };
 
-}  // namespace bps
+} // namespace cbr
 
-#endif  // BPS_PCL_UTILS__PCL_SEG_COMPONENT_HPP_
+#endif // ROS2_PCL_UTILS__PCL_SEG_COMPONENT_HPP_
