@@ -6,10 +6,12 @@
 
 #include <utility>
 
-namespace cbr {
+namespace cbr
+{
 
-PclFeatureComponent::PclFeatureComponent(const rclcpp::NodeOptions &opts)
-    : Node("pcl_feature", opts) {
+PclFeatureComponent::PclFeatureComponent(const rclcpp::NodeOptions & opts)
+: Node("pcl_feature", opts)
+{
   declare_parameter<int>("window", prm_.window);
   declare_parameter<double>("ang_disc_thresh", prm_.ang_disc_thresh);
   declare_parameter<double>("rel_disc_thresh", prm_.rel_disc_thresh);
@@ -34,18 +36,19 @@ PclFeatureComponent::PclFeatureComponent(const rclcpp::NodeOptions &opts)
   prm_.edge_thresh = get_parameter("edge_thresh").as_double();
 
   sub_pcl_ = create_subscription<sensor_msgs::msg::PointCloud2>(
-      "pointcloud", rclcpp::SensorDataQoS(),
-      std::bind(&PclFeatureComponent::cb_pcl_, this, std::placeholders::_1));
+    "pointcloud", rclcpp::SensorDataQoS(),
+    std::bind(&PclFeatureComponent::cb_pcl_, this, std::placeholders::_1));
   pub_edge_ = create_publisher<sensor_msgs::msg::PointCloud2>(
-      "feature/edge", rclcpp::SensorDataQoS());
+    "feature/edge", rclcpp::SensorDataQoS());
   pub_plane_ = create_publisher<sensor_msgs::msg::PointCloud2>(
-      "feature/plane", rclcpp::SensorDataQoS());
+    "feature/plane", rclcpp::SensorDataQoS());
 }
 
 PclFeatureComponent::~PclFeatureComponent() {}
 
 void PclFeatureComponent::cb_pcl_(
-    sensor_msgs::msg::PointCloud2::UniquePtr msg) {
+  sensor_msgs::msg::PointCloud2::UniquePtr msg)
+{
   auto [edges, planar] = pcl_features(*msg, prm_);
 
   if (edges) {
@@ -56,6 +59,6 @@ void PclFeatureComponent::cb_pcl_(
   }
 }
 
-} // namespace cbr
+}  // namespace cbr
 
 RCLCPP_COMPONENTS_REGISTER_NODE(cbr::PclFeatureComponent)

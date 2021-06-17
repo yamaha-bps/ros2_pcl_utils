@@ -8,14 +8,18 @@
 
 #include "pcl_utils/filter.hpp"
 
-class ProjectionTest : public ::testing::Test {
+class ProjectionTest : public ::testing::Test
+{
 protected:
-  void SetUp() {
+  void SetUp()
+  {
     calib.k.fill(0);
-    calib.k[0] = 1;     // fx
-    calib.k[2] = 320.5; // cx
-    calib.k[4] = 1;     // fy
-    calib.k[5] = 240.5; // cy
+    calib.k[0] = 1;      // fx
+    calib.k[2] = 320.5;  // cx
+    calib.k[4] = 1;      // fy
+    calib.k[5] = 240.5;  // cy
+
+    calib.d.resize(5);
     calib.d[0] = 0;
     calib.d[1] = 0;
     calib.d[2] = 0;
@@ -31,13 +35,13 @@ protected:
     for (int h = 0; h != 480; ++h) {
       for (int w = 0; w != 640; ++w) {
         if (w > 320.5 && h > 240.5) {
-          img.data[h * img.step + w] = 1; // first quadrant
+          img.data[h * img.step + w] = 1;  // first quadrant
         } else if (w < 320.5 && h > 240.5) {
-          img.data[h * img.step + w] = 2; // second quadrant
+          img.data[h * img.step + w] = 2;  // second quadrant
         } else if (w < 320.5 && h < 240.5) {
-          img.data[h * img.step + w] = 3; // third quadrant
+          img.data[h * img.step + w] = 3;  // third quadrant
         } else if (w > 320.5 && h < 240.5) {
-          img.data[h * img.step + w] = 4; // fourth quadrant
+          img.data[h * img.step + w] = 4;  // fourth quadrant
         }
       }
     }
@@ -63,33 +67,33 @@ protected:
     // add four points
     pcl.data.resize(4 * pcl.point_step);
 
-    float *x1 =
-        reinterpret_cast<float *>(pcl.data.data() + 0 * pcl.point_step + 0);
-    float *y1 =
-        reinterpret_cast<float *>(pcl.data.data() + 0 * pcl.point_step + 4);
-    float *z1 =
-        reinterpret_cast<float *>(pcl.data.data() + 0 * pcl.point_step + 8);
+    float * x1 =
+      reinterpret_cast<float *>(pcl.data.data() + 0 * pcl.point_step + 0);
+    float * y1 =
+      reinterpret_cast<float *>(pcl.data.data() + 0 * pcl.point_step + 4);
+    float * z1 =
+      reinterpret_cast<float *>(pcl.data.data() + 0 * pcl.point_step + 8);
 
-    float *x2 =
-        reinterpret_cast<float *>(pcl.data.data() + 1 * pcl.point_step + 0);
-    float *y2 =
-        reinterpret_cast<float *>(pcl.data.data() + 1 * pcl.point_step + 4);
-    float *z2 =
-        reinterpret_cast<float *>(pcl.data.data() + 1 * pcl.point_step + 8);
+    float * x2 =
+      reinterpret_cast<float *>(pcl.data.data() + 1 * pcl.point_step + 0);
+    float * y2 =
+      reinterpret_cast<float *>(pcl.data.data() + 1 * pcl.point_step + 4);
+    float * z2 =
+      reinterpret_cast<float *>(pcl.data.data() + 1 * pcl.point_step + 8);
 
-    float *x3 =
-        reinterpret_cast<float *>(pcl.data.data() + 2 * pcl.point_step + 0);
-    float *y3 =
-        reinterpret_cast<float *>(pcl.data.data() + 2 * pcl.point_step + 4);
-    float *z3 =
-        reinterpret_cast<float *>(pcl.data.data() + 2 * pcl.point_step + 8);
+    float * x3 =
+      reinterpret_cast<float *>(pcl.data.data() + 2 * pcl.point_step + 0);
+    float * y3 =
+      reinterpret_cast<float *>(pcl.data.data() + 2 * pcl.point_step + 4);
+    float * z3 =
+      reinterpret_cast<float *>(pcl.data.data() + 2 * pcl.point_step + 8);
 
-    float *x4 =
-        reinterpret_cast<float *>(pcl.data.data() + 3 * pcl.point_step + 0);
-    float *y4 =
-        reinterpret_cast<float *>(pcl.data.data() + 3 * pcl.point_step + 4);
-    float *z4 =
-        reinterpret_cast<float *>(pcl.data.data() + 3 * pcl.point_step + 8);
+    float * x4 =
+      reinterpret_cast<float *>(pcl.data.data() + 3 * pcl.point_step + 0);
+    float * y4 =
+      reinterpret_cast<float *>(pcl.data.data() + 3 * pcl.point_step + 4);
+    float * z4 =
+      reinterpret_cast<float *>(pcl.data.data() + 3 * pcl.point_step + 8);
 
     *x1 = 1;
     *y1 = 1;
@@ -149,8 +153,9 @@ TEST_F(ProjectionTest, FourthQuadrant) {
 
 TEST_F(ProjectionTest, AllQuadrants) {
   auto copy = pcl.data;
-  cbr::filter(img, calib, std::unordered_set<uint8_t>{1, 2, 3, 4},
-              Sophus::SE3f{}, pcl);
+  cbr::filter(
+    img, calib, std::unordered_set<uint8_t>{1, 2, 3, 4},
+    Sophus::SE3f{}, pcl);
 
   ASSERT_EQ(copy.size(), pcl.data.size());
 

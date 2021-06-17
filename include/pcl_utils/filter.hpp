@@ -1,7 +1,7 @@
 // Copyright 2020 Yamaha Motor Corporation, USA
 
-#ifndef ROS2_PCL_UTILS__FILTER_HPP_
-#define ROS2_PCL_UTILS__FILTER_HPP_
+#ifndef PCL_UTILS__FILTER_HPP_
+#define PCL_UTILS__FILTER_HPP_
 
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
@@ -11,7 +11,8 @@
 
 #include <unordered_set>
 
-namespace cbr {
+namespace cbr
+{
 
 /**
  * @brief Camera projection with OpenCV model
@@ -23,9 +24,11 @@ namespace cbr {
  * @param cam camera information
  * @return Eigen::Matrix<T, 2, 1> pixel coordinates
  */
-template <typename T>
-Eigen::Matrix<T, 2, 1> cameraProject(const Eigen::Matrix<T, 3, 1> &pt_CAM,
-                                     const sensor_msgs::msg::CameraInfo &cam) {
+template<typename T>
+Eigen::Matrix<T, 2, 1> cameraProject(
+  const Eigen::Matrix<T, 3, 1> & pt_CAM,
+  const sensor_msgs::msg::CameraInfo & cam)
+{
   const T xp = pt_CAM.x() / pt_CAM.z();
   const T yp = pt_CAM.y() / pt_CAM.z();
 
@@ -33,12 +36,13 @@ Eigen::Matrix<T, 2, 1> cameraProject(const Eigen::Matrix<T, 3, 1> &pt_CAM,
   const T r4 = r2 * r2;
   const T ratio = 1. + cam.d[0] * r2 + cam.d[1] * r4 + cam.d[4] * (r2 * r4);
   const T xpp =
-      xp * ratio + 2 * cam.d[2] * xp * yp + cam.d[3] * (r2 + 2 * xp * xp);
+    xp * ratio + 2 * cam.d[2] * xp * yp + cam.d[3] * (r2 + 2 * xp * xp);
   const T ypp =
-      yp * ratio + cam.d[2] * (r2 + 2 * yp * yp) + 2 * cam.d[3] * xp * yp;
+    yp * ratio + cam.d[2] * (r2 + 2 * yp * yp) + 2 * cam.d[3] * xp * yp;
 
-  return Eigen::Matrix<T, 2, 1>(cam.k[0] * xpp + cam.k[2],
-                                cam.k[1] * ypp + cam.k[5]);
+  return Eigen::Matrix<T, 2, 1>(
+    cam.k[0] * xpp + cam.k[2],
+    cam.k[4] * ypp + cam.k[5]);
 }
 
 /**
@@ -49,11 +53,12 @@ Eigen::Matrix<T, 2, 1> cameraProject(const Eigen::Matrix<T, 3, 1> &pt_CAM,
  * @param good_idx the image indices to preserve in the filtered point cloud
  * @param[in, out] pcl incoming pointcloud
  */
-void filter(const sensor_msgs::msg::Image &img,
-            const sensor_msgs::msg::CameraInfo &calib,
-            const std::unordered_set<uint8_t> &good_idx,
-            const Sophus::SE3f &P_CL, sensor_msgs::msg::PointCloud2 &pcl);
+void filter(
+  const sensor_msgs::msg::Image & img,
+  const sensor_msgs::msg::CameraInfo & calib,
+  const std::unordered_set<uint8_t> & good_idx,
+  const Sophus::SE3f & P_CL, sensor_msgs::msg::PointCloud2 & pcl);
 
-} // namespace cbr
+}  // namespace cbr
 
-#endif // ROS2_PCL_UTILS__FILTER_HPP_
+#endif  // PCL_UTILS__FILTER_HPP_
