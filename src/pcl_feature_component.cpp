@@ -46,7 +46,8 @@ PclFeatureComponent::PclFeatureComponent(const rclcpp::NodeOptions & opts)
   RCLCPP_INFO(get_logger(), "Started node");
 }
 
-PclFeatureComponent::~PclFeatureComponent() {
+PclFeatureComponent::~PclFeatureComponent()
+{
   RCLCPP_INFO(get_logger(), "Closing node");
 }
 
