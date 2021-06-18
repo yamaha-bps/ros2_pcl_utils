@@ -1,4 +1,5 @@
 # ```ros2_pcl_utils```
+[![foxy](https://github.com/yamaha-bps/ros2_plc_utils/actions/workflows/foxy.yaml/badge.svg)](https://github.com/yamaha-bps/ros2_plc_utils/actions/workflows/foxy.yaml) [![galactic](https://github.com/yamaha-bps/ros2_plc_utils/actions/workflows/galactic.yaml/badge.svg)](https://github.com/yamaha-bps/ros2_plc_utils/actions/workflows/galactic.yaml)
 
 ROS2 nodes for pointcloud manipulation:
 
