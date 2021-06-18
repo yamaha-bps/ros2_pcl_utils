@@ -17,7 +17,8 @@ void filter(
   const sensor_msgs::msg::Image & img,
   const sensor_msgs::msg::CameraInfo & cam,
   const std::unordered_set<uint8_t> & good_labels,
-  const Sophus::SE3f & P_CL,
+  const Eigen::Vector3f & T_CL,
+  const Eigen::Quaternionf & R_CL,
   sensor_msgs::msg::PointCloud2 & pcl
 )
 {
@@ -77,7 +78,7 @@ void filter(
       *reinterpret_cast<float *>(ptr + pcl.fields[2].offset)
     };
 
-    const Eigen::Vector3f pt_C = P_CL * pt_L;
+    const Eigen::Vector3f pt_C = R_CL * pt_L + T_CL;
     if (pt_C.z() <= 0) {
       continue;  // behind camera
     }

@@ -120,7 +120,10 @@ protected:
 };
 
 TEST_F(ProjectionTest, FirstQuadrant) {
-  cbr::filter(img, calib, std::unordered_set<uint8_t>{1}, Sophus::SE3f{}, pcl);
+  cbr::filter(
+    img, calib, std::unordered_set<uint8_t>{1},
+    Eigen::Vector3f::Zero(), Eigen::Quaternionf::Identity(), pcl
+  );
   ASSERT_EQ(pcl.data.size(), pcl.point_step);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 0), 1);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 4), 1);
@@ -128,7 +131,10 @@ TEST_F(ProjectionTest, FirstQuadrant) {
 }
 
 TEST_F(ProjectionTest, SecondQuadrant) {
-  cbr::filter(img, calib, std::unordered_set<uint8_t>{2}, Sophus::SE3f{}, pcl);
+  cbr::filter(
+    img, calib, std::unordered_set<uint8_t>{2},
+    Eigen::Vector3f::Zero(), Eigen::Quaternionf::Identity(), pcl
+  );
   ASSERT_EQ(pcl.data.size(), pcl.point_step);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 0), -1);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 4), 1);
@@ -136,7 +142,10 @@ TEST_F(ProjectionTest, SecondQuadrant) {
 }
 
 TEST_F(ProjectionTest, ThirdQuadrant) {
-  cbr::filter(img, calib, std::unordered_set<uint8_t>{3}, Sophus::SE3f{}, pcl);
+  cbr::filter(
+    img, calib, std::unordered_set<uint8_t>{3},
+    Eigen::Vector3f::Zero(), Eigen::Quaternionf::Identity(), pcl
+  );
   ASSERT_EQ(pcl.data.size(), pcl.point_step);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 0), -1);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 4), -1);
@@ -144,7 +153,10 @@ TEST_F(ProjectionTest, ThirdQuadrant) {
 }
 
 TEST_F(ProjectionTest, FourthQuadrant) {
-  cbr::filter(img, calib, std::unordered_set<uint8_t>{4}, Sophus::SE3f{}, pcl);
+  cbr::filter(
+    img, calib, std::unordered_set<uint8_t>{4},
+    Eigen::Vector3f::Zero(), Eigen::Quaternionf::Identity(), pcl
+  );
   ASSERT_EQ(pcl.data.size(), pcl.point_step);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 0), 1);
   ASSERT_FLOAT_EQ(*reinterpret_cast<float *>(pcl.data.data() + 4), -1);
@@ -155,7 +167,7 @@ TEST_F(ProjectionTest, AllQuadrants) {
   auto copy = pcl.data;
   cbr::filter(
     img, calib, std::unordered_set<uint8_t>{1, 2, 3, 4},
-    Sophus::SE3f{}, pcl);
+    Eigen::Vector3f::Identity(), Eigen::Quaternionf::Identity(), pcl);
 
   ASSERT_EQ(copy.size(), pcl.data.size());
 

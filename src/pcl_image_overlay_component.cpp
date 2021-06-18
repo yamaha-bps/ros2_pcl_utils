@@ -139,10 +139,9 @@ void PclImageOverlayComponent::cb_pcl_(sensor_msgs::msg::PointCloud2::UniquePtr 
   auto tf = tf2_buf_->lookupTransform(
     pImpl->img_frame, msg->header.frame_id, rclcpp::Time(0)
     ).transform;
-  Sophus::SE3f P_CAM_LIDAR(
-    Eigen::Quaternionf(tf.rotation.w, tf.rotation.x, tf.rotation.y, tf.rotation.z),
-    Eigen::Vector3f(tf.translation.x, tf.translation.y, tf.translation.z)
-  );
+
+  Eigen::Quaternionf q_CAM_LIDAR(tf.rotation.w, tf.rotation.x, tf.rotation.y, tf.rotation.z);
+  Eigen::Vector3f t_CAM_LIDAR(tf.translation.x, tf.translation.y, tf.translation.z);
 
   PclIterator it(*msg);
 
@@ -158,7 +157,7 @@ void PclImageOverlayComponent::cb_pcl_(sensor_msgs::msg::PointCloud2::UniquePtr 
 
   for (auto i = 0u; i != msg->width; ++i, ++it) {
     if (it.intensity() >= 0) {
-      pImpl->points_accum.push_back(P_CAM_LIDAR * *it);
+      pImpl->points_accum.push_back(q_CAM_LIDAR * *it + t_CAM_LIDAR);
     }
   }
 }

@@ -8,7 +8,6 @@ find_package(ament_cmake REQUIRED)
 find_package(Boost REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(Sophus REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
@@ -32,7 +31,6 @@ PUBLIC
 )
 target_link_libraries(pcl_utils
 PUBLIC
-  Sophus::Sophus
   Eigen3::Eigen
   ${sensor_msgs_LIBRARIES}
 )

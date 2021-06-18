@@ -22,6 +22,8 @@
 namespace cbr
 {
 
+using Pose = std::pair<Eigen::Vector3f, Eigen::Quaternionf>;
+
 struct PclSegComponent::Impl
 {
   std::mutex pcl_queue_mtx;
@@ -43,9 +45,9 @@ struct PclSegComponent::Impl
 
   std::mutex frames_mtx;
   std::unordered_map<
-    std::string, Sophus::SE3f, std::hash<std::string>,
+    std::string, Pose, std::hash<std::string>,
     std::equal_to<std::string>,
-    Eigen::aligned_allocator<std::pair<std::string, Sophus::SE3f>>>
+    Eigen::aligned_allocator<std::pair<std::string, Pose>>>
   frames;
 };
 
@@ -140,13 +142,14 @@ void PclSegComponent::cb_pcl_(sensor_msgs::msg::PointCloud2::UniquePtr msg)
       pImpl->camera_frame, msg->header.frame_id, msg->header.stamp);
 
     std::lock_guard lock(pImpl->frames_mtx);
-    pImpl->frames[msg->header.frame_id] = Sophus::SE3f(
-      Eigen::Quaternionf(
-        tf.transform.rotation.w, tf.transform.rotation.x,
-        tf.transform.rotation.y, tf.transform.rotation.z),
+    pImpl->frames[msg->header.frame_id] = std::make_pair(
       Eigen::Vector3f(
         tf.transform.translation.x, tf.transform.translation.y,
-        tf.transform.translation.z));
+        tf.transform.translation.z),
+      Eigen::Quaternionf(
+        tf.transform.rotation.w, tf.transform.rotation.x,
+        tf.transform.rotation.y, tf.transform.rotation.z)
+    );
   }
 
   {
@@ -254,7 +257,7 @@ void PclSegComponent::work()
     std::lock_guard flock(pImpl->frames_mtx);
     auto it = pImpl->frames.find(pcl->header.frame_id);
     if (it != pImpl->frames.end()) {
-      const auto P_CAM_LID = it->second;
+      const auto [T_CAM_LID, R_CAM_LID] = it->second;
 
       // here we are guaranteed to have one image before and one image after the
       // pcl
@@ -275,8 +278,8 @@ void PclSegComponent::work()
 
       // filter the pointcloud with respect to the image
       filter(
-        *pImpl->img_queue[idx], pImpl->calib, pImpl->classes_, P_CAM_LID,
-        *pcl);
+        *pImpl->img_queue[idx], pImpl->calib, pImpl->classes_,
+        T_CAM_LID, R_CAM_LID, *pcl);
 
       // re-publish filtered pointcloud
       pub_pcl_->publish(std::move(pcl));
