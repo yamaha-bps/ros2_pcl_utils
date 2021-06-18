@@ -39,7 +39,7 @@ struct PclImageOverlayComponent::Impl
 
 PclImageOverlayComponent::PclImageOverlayComponent(
   const rclcpp::NodeOptions & opts)
-: Node("pcl_image_overlay", opts), pImpl(std::make_unique<Impl>())
+: Node("image_overlay", opts), pImpl(std::make_unique<Impl>())
 {
   declare_parameter<int>("max_size", 10000);
   pImpl->k_max_size = get_parameter("max_size").as_int();
@@ -47,33 +47,27 @@ PclImageOverlayComponent::PclImageOverlayComponent(
   declare_parameter<double>("cmap_min", 2.);
   pImpl->k_cmap_min = get_parameter("cmap_min").as_double();
   declare_parameter<double>("cmap_max", 20.);
-  pImpl->k_cmap_range =
-    get_parameter("cmap_max").as_double() - pImpl->k_cmap_min;
-
+  pImpl->k_cmap_range = get_parameter("cmap_max").as_double() - pImpl->k_cmap_min;
   declare_parameter<int>("draw_radius", 2);
   pImpl->k_draw_radius = get_parameter("draw_radius").as_int();
 
   sub_img_ = create_subscription<sensor_msgs::msg::Image>(
     "image", rclcpp::SystemDefaultsQoS(),
-    std::bind(
-      &PclImageOverlayComponent::cb_img_, this,
-      std::placeholders::_1));
+    std::bind(&PclImageOverlayComponent::cb_img_, this, std::placeholders::_1));
 
   sub_calib_ = create_subscription<sensor_msgs::msg::CameraInfo>(
-    "calibration", rclcpp::SystemDefaultsQoS(),
+    "camera_info", rclcpp::SystemDefaultsQoS(),
     [this](const sensor_msgs::msg::CameraInfo::SharedPtr msg) {
       if (!pImpl->calib_received) {
         pImpl->cam = *msg;
         pImpl->calib_received = true;
-        RCLCPP_INFO(get_logger(), "Received calibration");
+        RCLCPP_INFO(get_logger(), "Received camera info");
       }
     });
 
   sub_pcl_ = create_subscription<sensor_msgs::msg::PointCloud2>(
     "pointcloud", rclcpp::SensorDataQoS(),
-    std::bind(
-      &PclImageOverlayComponent::cb_pcl_, this,
-      std::placeholders::_1));
+    std::bind( &PclImageOverlayComponent::cb_pcl_, this, std::placeholders::_1));
 
   pub_overlay_ = create_publisher<sensor_msgs::msg::Image>(
     "image_overlay", rclcpp::SystemDefaultsQoS());
@@ -119,8 +113,9 @@ void PclImageOverlayComponent::cb_img_(sensor_msgs::msg::Image::UniquePtr msg)
         pImpl->k_cmap_range),
         0., 1.);
       cv::circle(
-        img, cv::Point2f(pt_PX.x(), pt_PX.y()), 2,
-        cv::Scalar(255 * cl, 0, 255 * (1 - cl)));
+        img, cv::Point2f(pt_PX.x(), pt_PX.y()),
+        pImpl->k_draw_radius, cv::Scalar(255 * cl, 0, 255 * (1 - cl))
+      );
     }
 
     pImpl->points_accum.clear();
@@ -130,31 +125,25 @@ void PclImageOverlayComponent::cb_img_(sensor_msgs::msg::Image::UniquePtr msg)
   pub_overlay_->publish(std::move(msg));
 }
 
-void PclImageOverlayComponent::cb_pcl_(
-  sensor_msgs::msg::PointCloud2::UniquePtr msg)
+void PclImageOverlayComponent::cb_pcl_(sensor_msgs::msg::PointCloud2::UniquePtr msg)
 {
   if (!pImpl->frame_received) {
     return;
   }
 
-  if (!tf2_buf_->canTransform(
-      pImpl->img_frame, msg->header.frame_id,
-      rclcpp::Time(0)))
+  if (!tf2_buf_->canTransform(pImpl->img_frame, msg->header.frame_id, rclcpp::Time(0)))
   {
     return;
   }
 
   // transform cloud to sensor frame
-  auto tf = tf2_buf_
-    ->lookupTransform(
-    pImpl->img_frame, msg->header.frame_id,
-    rclcpp::Time(0))
-    .transform;
+  auto tf = tf2_buf_->lookupTransform(
+      pImpl->img_frame, msg->header.frame_id, rclcpp::Time(0)
+      ).transform;
   Sophus::SE3f P_CAM_LIDAR(
-    Eigen::Quaternionf(
-      tf.rotation.w, tf.rotation.x, tf.rotation.y,
-      tf.rotation.z),
-    Eigen::Vector3f(tf.translation.x, tf.translation.y, tf.translation.z));
+    Eigen::Quaternionf(tf.rotation.w, tf.rotation.x, tf.rotation.y, tf.rotation.z),
+    Eigen::Vector3f(tf.translation.x, tf.translation.y, tf.translation.z)
+  );
 
   PclIterator it(*msg);
 
@@ -169,7 +158,7 @@ void PclImageOverlayComponent::cb_pcl_(
   }
 
   for (auto i = 0u; i != msg->width; ++i, ++it) {
-    if (it.intensity() > 0) {
+    if (it.intensity() >= 0) {
       pImpl->points_accum.push_back(P_CAM_LIDAR * *it);
     }
   }
