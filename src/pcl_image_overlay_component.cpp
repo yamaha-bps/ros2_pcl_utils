@@ -150,7 +150,7 @@ void PclImageOverlayComponent::cb_pcl_(sensor_msgs::msg::PointCloud2::UniquePtr 
   if (pImpl->points_accum.size() > pImpl->k_max_size) {
     RCLCPP_WARN_THROTTLE(
       get_logger(), *get_clock(), 5000,
-      "Accumulated %d points without getting in image, resetting...",
+      "Accumulated %lu points without getting in image, resetting...",
       pImpl->points_accum.size());
     pImpl->points_accum.clear();
   }

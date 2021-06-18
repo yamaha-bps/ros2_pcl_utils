@@ -62,7 +62,7 @@ PclSegComponent::PclSegComponent(const rclcpp::NodeOptions & opts)
 
   for (auto c : classes_vec) {
     if (c < 0 || c > std::numeric_limits<uint8_t>::max()) {
-      RCLCPP_ERROR(get_logger(), "Class index %d not a uint8", c);
+      RCLCPP_ERROR(get_logger(), "Class index %lu not a uint8", c);
     } else {
       pImpl->classes_.insert(static_cast<uint8_t>(c));
     }
@@ -157,7 +157,7 @@ void PclSegComponent::cb_pcl_(sensor_msgs::msg::PointCloud2::UniquePtr msg)
     if (pImpl->pcl_queue.full()) {
       RCLCPP_WARN(
         get_logger(),
-        "PCL buffer reached capacity %d, dropping oldest",
+        "PCL buffer reached capacity %lu, dropping oldest",
         pImpl->pcl_queue.capacity());
     }
     pImpl->pcl_queue.push_back(std::move(msg));
