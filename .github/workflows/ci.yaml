@@ -11,10 +11,13 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        ros_distro: [ foxy ]
+        fail-fast: false
+        ros_distro: [ foxy, galactic ]
         include:
           - ros_distro: foxy
             docker_image: rostooling/setup-ros-docker:ubuntu-focal-ros-foxy-ros-base-latest
+          - ros_distro: galactic
+            docker_image: rostooling/setup-ros-docker:ubuntu-focal-ros-galactic-ros-base-latest
     container:
       image: ${{ matrix.docker_image }}
     steps:
