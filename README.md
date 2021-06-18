@@ -19,13 +19,12 @@ Consider this gazebo scene with one camera and one lidar viewing two objects:
 
 <img src="images/scene.png" width="500">
 
-The ```PclFeatureComponent``` extracts edge and planar features from the lidar pointcloud. To the left
-is the raw pointcloud, and to the right the features are displayed.
+The ```PclFeatureComponent``` extracts edge and planar features from the lidar pointcloud. The first image shows
+the raw pointcloud, and the second shows features extracted by ```PclFeatureComponent```.
 
 <img src="images/pcl.png" width="400"> <img src="images/features.png" width="400">
 
-The ```PclImageOverlayComponent``` projects a pointcloud onto an image. To the left is
-the original image, and to the right is the same image with a pointcloud projected into it.
+The ```PclImageOverlayComponent``` projects a pointcloud onto an image.
 
 <img src="images/image.png" width="400"> <img src="images/overlay.png" width="400">
 
