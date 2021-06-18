@@ -42,9 +42,13 @@ PclFeatureComponent::PclFeatureComponent(const rclcpp::NodeOptions & opts)
     "feature/edge", rclcpp::SensorDataQoS());
   pub_plane_ = create_publisher<sensor_msgs::msg::PointCloud2>(
     "feature/plane", rclcpp::SensorDataQoS());
+
+  RCLCPP_INFO(get_logger(), "Started node");
 }
 
-PclFeatureComponent::~PclFeatureComponent() {}
+PclFeatureComponent::~PclFeatureComponent() {
+  RCLCPP_INFO(get_logger(), "Closing node");
+}
 
 void PclFeatureComponent::cb_pcl_(
   sensor_msgs::msg::PointCloud2::UniquePtr msg)
