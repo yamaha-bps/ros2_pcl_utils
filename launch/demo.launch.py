@@ -2,9 +2,9 @@ from os.path import join
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch_ros.actions import Node
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
@@ -22,9 +22,9 @@ def generate_launch_description():
 
     desc.add_action(
         Node(
-            package="tf2_ros",
-            executable="static_transform_publisher",
-            arguments=["0", "0", "0.1", "-1.57079632679", "0", "-1.57079632679", "lidar", "camera"],
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            arguments=['0', '0', '0.1', '-1.57079632', '0', '-1.57079632', 'lidar', 'camera'],
             parameters=[{
                 'use_sim_time': True
             }]
@@ -33,9 +33,11 @@ def generate_launch_description():
 
     desc.add_action(
         Node(
-            package="rviz2",
-            executable="rviz2",
-            arguments=['-d', join(get_package_share_directory('pcl_utils'), 'launch', 'demo.rviz')],
+            package='rviz2',
+            executable='rviz2',
+            arguments=[
+                '-d', join(get_package_share_directory('pcl_utils'), 'launch', 'demo.rviz')
+            ],
             parameters=[{
                 ''
                 'use_sim_time': True
@@ -45,8 +47,8 @@ def generate_launch_description():
 
     desc.add_action(
         Node(
-            package="pcl_utils",
-            executable="feature_node",
+            package='pcl_utils',
+            executable='feature_node',
             parameters=[{
                 'ang_disc_thresh': 3.14,
                 'ang_inc_thresh': 60 * 3.14 / 180,
@@ -62,19 +64,19 @@ def generate_launch_description():
                 'use_sim_time': True
             }],
             remappings=[
-                ("pointcloud", "sensors/lidar/out")]
+                ('pointcloud', 'sensors/lidar/out')]
 
         )
     )
 
     desc.add_action(
         Node(
-            package="pcl_utils",
-            executable="image_overlay_node",
+            package='pcl_utils',
+            executable='image_overlay_node',
             remappings=[
-                ("pointcloud", "sensors/lidar/out"),
-                ("image", "sensors/camera/image_raw"),
-                ("camera_info", "sensors/camera/camera_info")
+                ('pointcloud', 'sensors/lidar/out'),
+                ('image', 'sensors/camera/image_raw'),
+                ('camera_info', 'sensors/camera/camera_info')
             ],
             parameters=[{
                 'cmap_min': 4.,

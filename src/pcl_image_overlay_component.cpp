@@ -67,7 +67,7 @@ PclImageOverlayComponent::PclImageOverlayComponent(
 
   sub_pcl_ = create_subscription<sensor_msgs::msg::PointCloud2>(
     "pointcloud", rclcpp::SensorDataQoS(),
-    std::bind( &PclImageOverlayComponent::cb_pcl_, this, std::placeholders::_1));
+    std::bind(&PclImageOverlayComponent::cb_pcl_, this, std::placeholders::_1));
 
   pub_overlay_ = create_publisher<sensor_msgs::msg::Image>(
     "image_overlay", rclcpp::SystemDefaultsQoS());
@@ -131,15 +131,14 @@ void PclImageOverlayComponent::cb_pcl_(sensor_msgs::msg::PointCloud2::UniquePtr 
     return;
   }
 
-  if (!tf2_buf_->canTransform(pImpl->img_frame, msg->header.frame_id, rclcpp::Time(0)))
-  {
+  if (!tf2_buf_->canTransform(pImpl->img_frame, msg->header.frame_id, rclcpp::Time(0))) {
     return;
   }
 
   // transform cloud to sensor frame
   auto tf = tf2_buf_->lookupTransform(
-      pImpl->img_frame, msg->header.frame_id, rclcpp::Time(0)
-      ).transform;
+    pImpl->img_frame, msg->header.frame_id, rclcpp::Time(0)
+    ).transform;
   Sophus::SE3f P_CAM_LIDAR(
     Eigen::Quaternionf(tf.rotation.w, tf.rotation.x, tf.rotation.y, tf.rotation.z),
     Eigen::Vector3f(tf.translation.x, tf.translation.y, tf.translation.z)
