@@ -4,7 +4,6 @@
 
 #include <boost/circular_buffer.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
-#include <sophus/se3.hpp>
 
 #include <condition_variable>
 #include <deque>

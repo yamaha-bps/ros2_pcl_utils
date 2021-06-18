@@ -7,7 +7,7 @@
 #include <sensor_msgs/msg/image.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
-#include <sophus/se3.hpp>
+#include <Eigen/Geometry>
 
 #include <unordered_set>
 
