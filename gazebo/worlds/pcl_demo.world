@@ -1,0 +1,121 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="camera_test">
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <model name="target">
+      <static>true</static>
+      <link name="target_link">
+        <visual name="target_visual">
+          <pose>2.5 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.1 0.9 1</ambient>
+            <diffuse>0.1 0.1 0.9 1</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 1</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="camera">
+      <static>true</static>
+      <link name="camera_link">
+        <pose>0 0 0 0 0 0</pose>
+        <sensor type="camera" name="camera">
+          <always_on>1</always_on>
+          <update_rate>1.0</update_rate>
+          <camera name="camera">
+            <image>
+              <width>640</width>
+              <height>480</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.05</near>
+              <far>300</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+            </noise>
+            <distortion>
+              <k1>0.0</k1>
+              <k2>0.0</k2>
+              <k3>0.0</k3>
+              <p1>0.0</p1>
+              <p2>0.0</p2>
+            </distortion>
+            <lens>
+              <type>stereographic</type>
+              <scale_to_hfov>false</scale_to_hfov>
+              <intrinsics>
+                <fx>700</fx>
+                <fy>700</fy>
+                <cx>320.5</cx>
+                <cy>240.5</cy>
+                <s>0.0</s>
+              </intrinsics>
+            </lens>
+          </camera>
+          <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+            <ros>
+              <namespace>sensors</namespace>
+            </ros>
+          </plugin>
+        </sensor>
+      </link>
+    </model>
+
+    <model name="lidar">
+      <static>true</static>
+      <link name="lidar_link">
+        <pose>0 0 0.2 0 0 0</pose>
+        <sensor type="ray" name="lidar">
+          <always_on>1</always_on>
+          <update_rate>10</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>4000</samples>
+                <resolution>1</resolution>
+                <min_angle>-180</min_angle>
+                <max_angle>180</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>8</samples>
+                <resolution>1</resolution>
+                <min_angle>-30</min_angle>
+                <max_angle>0</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>10</min>
+              <max>100</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </ray>
+          <plugin name="lidar_plugin" filename="libgazebo_ros_ray_sensor.so">
+            <ros>
+              <namespace>sensors/namespace>
+            </ros>
+            <output_type>sensor_msgs/PointCloud2</output_type>
+          </plugin>
+        </sensor>
+      </link>
+    </model>
+  </world>
+</sdf>
+
