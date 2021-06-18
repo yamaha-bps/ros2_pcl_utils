@@ -10,13 +10,11 @@ jobs:
   build_and_test:
     strategy:
       matrix:
-        ros_distro: [foxy, galactic]
+        ros_distro: [foxy]
     runs-on: ubuntu-20.04
+    container: ros:${{ matrix.ros_distro }}-ros-core
     steps:
     - uses: actions/checkout@v2
-    - uses: ros-tooling/setup-ros@v0.2
-      with:
-        required-ros-distributions: ${{ matrix.ros_distro }}
     - uses: ros-tooling/action-ros-ci@v0.2
       with:
         target-ros2-distro: ${{ matrix.ros_distro }}
