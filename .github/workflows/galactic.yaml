@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: galactic
 
 on:
   push:
@@ -9,17 +9,8 @@ on:
 jobs:
   build_and_test:
     runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        ros_distro: [ foxy, galactic ]
-        include:
-          - ros_distro: foxy
-            docker_image: rostooling/setup-ros-docker:ubuntu-focal-ros-foxy-ros-base-latest
-          - ros_distro: galactic
-            docker_image: rostooling/setup-ros-docker:ubuntu-focal-ros-galactic-ros-base-latest
     container:
-      image: ${{ matrix.docker_image }}
+      image: rostooling/setup-ros-docker:ubuntu-focal-ros-galactic-ros-base-latest
     steps:
       - name: Setup directories
         run: mkdir -p ros_ws/src
@@ -30,7 +21,7 @@ jobs:
       - name: build and test
         uses: ros-tooling/action-ros-ci@v0.2
         with:
-          target-ros2-distro: ${{ matrix.ros_distro }}
+          target-ros2-distro: galactic
           import-token: ${{ secrets.CI_TOKEN }}
           package-name: pcl_utils
 
