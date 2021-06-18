@@ -14,6 +14,7 @@
 
   <build_depend>eigen</build_depend>
   <build_depend>libboost-dev</build_depend>
+  <build_depend>libopencv-dev</build_depend>
   <build_depend>rclcpp</build_depend>
   <build_depend>rclcpp_components</build_depend>
   <build_depend>sophus</build_depend>
