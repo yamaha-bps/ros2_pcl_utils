@@ -12,10 +12,11 @@ jobs:
       matrix:
         ros_distro: [foxy]
     runs-on: ubuntu-20.04
+    container: ros:${{ matrix.ros_distro }}-ros-core
     steps:
     - uses: actions/checkout@v2
     - uses: ros-tooling/action-ros-ci@v0.2
-      image: ros:${{ matrix.ros_distro }}-ros-core
+      container: ros:${{ matrix.ros_distro }}-ros-core
       with:
         target-ros2-distro: ${{ matrix.ros_distro }}
         import-token: ${{ secrets.CI_TOKEN }}
