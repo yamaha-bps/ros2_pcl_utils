@@ -3,7 +3,6 @@
 #include "pcl_utils/pcl_seg_component.hpp"
 
 #include <boost/circular_buffer.hpp>
-#include <fmt/format.h>
 #include <rclcpp_components/register_node_macro.hpp>
 #include <sophus/se3.hpp>
 
@@ -68,10 +67,6 @@ PclSegComponent::PclSegComponent(const rclcpp::NodeOptions & opts)
     }
   }
 
-  RCLCPP_INFO(
-    get_logger(), "Filtering classes [%s]",
-    fmt::format("{}", fmt::join(pImpl->classes_, ", ")).c_str());
-
   sub_pcl_ = create_subscription<sensor_msgs::msg::PointCloud2>(
     "pointcloud", rclcpp::SensorDataQoS(),
     std::bind(&PclSegComponent::cb_pcl_, this, std::placeholders::_1));
@@ -98,7 +93,7 @@ PclSegComponent::PclSegComponent(const rclcpp::NodeOptions & opts)
 
   worker_thread_ = std::thread(std::bind(&PclSegComponent::work, this));
 
-  RCLCPP_INFO(get_logger(), "Pointcloud segmentation node started");
+  RCLCPP_INFO(get_logger(), "Started node");
 }
 
 PclSegComponent::~PclSegComponent()
@@ -110,7 +105,7 @@ PclSegComponent::~PclSegComponent()
     worker_thread_.join();
   }
 
-  RCLCPP_INFO(get_logger(), "Closing pointcloud segmentation node");
+  RCLCPP_INFO(get_logger(), "Closing node");
 }
 
 void PclSegComponent::cb_pcl_(sensor_msgs::msg::PointCloud2::UniquePtr msg)
