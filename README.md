@@ -17,17 +17,17 @@ These images are from the ```launch/demo.launch.py``` example.
 
 Consider this gazebo scene with one camera and one lidar viewing two objects:
 
-![](images/scene.png)
+<img src="images/scene.png" width="500">
 
 The ```PclFeatureComponent``` extracts edge and planar features from the lidar pointcloud. To the left
 is the raw pointcloud, and to the right the features are displayed.
 
-![](images/pcl.png) ![](images/features.png)
+<img src="images/pcl.png" width="400"> <img src="images/features.png" width="400">
 
 The ```PclImageOverlayComponent``` projects a pointcloud onto an image. To the left is
 the original image, and to the right is the same image with a pointcloud projected into it.
 
-![](images/image.png) ![](images/overlay.png)
+<img src="images/image.png" width="400"> <img src="images/overlay.png" width="400">
 
 ## ```PclFeatureComponent```
 
