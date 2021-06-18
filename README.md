@@ -48,9 +48,7 @@ Features are extracted by
 2. Computing **c-values** for remaining points that determine how close a point is to being the average of its surrounding. Small c-values are indicative of a planar surface, while high c-values are indicative of an edge.
 
 
-```math
-  c(p_0) = \frac{\left\| p_0 - \frac{1}{2 W} \sum_{i \in [-W, W], i \neq 0} p_i \right\|}{\| p_0 \|}
-```
+![](images/equation.png)
 
 ### Subscribes to
 
