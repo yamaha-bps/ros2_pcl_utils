@@ -11,6 +11,23 @@ The nodes assume that the incoming pointclouds have the XYZI structure.
 
 Points with negative intensity are assumed to be non-returns.
 
+## Example
+
+These images are from the ```launch/demo.launch.py``` example.
+
+Consider this gazebo scene with one camera and one lidar viewing two objects:
+
+<img src="images/scene.png" width="500">
+
+The ```PclFeatureComponent``` extracts edge and planar features from the lidar pointcloud. The first image shows
+the raw pointcloud, and the second shows features extracted by ```PclFeatureComponent```.
+
+<img src="images/pcl.png" width="400"> <img src="images/features.png" width="400">
+
+The ```PclImageOverlayComponent``` projects a pointcloud onto an image.
+
+<img src="images/image.png" width="400"> <img src="images/overlay.png" width="400">
+
 ## ```PclFeatureComponent```
 
 Extracts edge and planar features from a pointcloud.
@@ -30,9 +47,7 @@ Features are extracted by
 2. Computing **c-values** for remaining points that determine how close a point is to being the average of its surrounding. Small c-values are indicative of a planar surface, while high c-values are indicative of an edge.
 
 
-```math
-  c(p_0) = \frac{\left\| p_0 - \frac{1}{2 W} \sum_{i \in [-W, W], i \neq 0} p_i \right\|}{\| p_0 \|}
-```
+![](images/equation.png)
 
 ### Subscribes to
 
