@@ -20,5 +20,6 @@ jobs:
     - uses: ros-tooling/action-ros-ci@v0.2
       with:
         target-ros2-distro: ${{ matrix.ros_distro }}
+        import-token: ${{ secrets.CI_TOKEN }}
         package-name: pcl_utils
 
