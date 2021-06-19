@@ -44,65 +44,67 @@ Features are extracted by
   - Surface inclination angle too large
   - Close to scan discontinuity
 
-2. Computing **c-values** for remaining points that determine how close a point is to being the average of its surrounding. Small c-values are indicative of a planar surface, while high c-values are indicative of an edge.
+2. Computing **c-values** for remaining points that determine how close a point
+is to being the average of its surrounding. Small c-values are indicative of a 
+planar surface, while high c-values are indicative of an edge.
 
 
 ![](images/equation.png)
 
 ### Subscribes to
 
- - ```pointcloud``` - ```sensor_msgs/msg/PointCloud2```
+- ```pointcloud``` - ```sensor_msgs/msg/PointCloud2```
 
 ### Publishes to
 
- - ```feature/plane``` - ```sensor_msgs/msg/PointCloud2```
- - ```feature/edge``` - ```sensor_msgs/msg/PointCloud2```
+- ```feature/plane``` - ```sensor_msgs/msg/PointCloud2```
+- ```feature/edge``` - ```sensor_msgs/msg/PointCloud2```
 
 ### Parameters
 
- - ```window``` - ```int```, default ```5```
+- ```window``` - ```int```, default ```5```
 
-   Window width (in points) in feature extraction algorithm.
-   At most one feature is detected in each window.
+  Window width (in points) in feature extraction algorithm.
+  At most one feature is detected in each window.
 
- - ```ang_disc_thresh``` - ```float```, default ```M_PI```
+- ```ang_disc_thresh``` - ```float```, default ```M_PI```
 
-  Angular discontinuity threshold [rad] (between 0 and PI)
-  Points in window around a discontinuity are marked as invalid
-  Leave as M_PI if scan is known to be continuous
+  Angular discontinuity threshold [rad] (between 0 and PI).
+  Points in window around a discontinuity are marked as invalid.
+  Leave as M_PI if scan is known to be continuous.
 
- - ```rel_disc_thresh``` - ```float```, default ```MAX_FLOAT```
+- ```rel_disc_thresh``` - ```float```, default ```MAX_FLOAT```
 
-  Relative distance discontinuity threshold
+  Relative distance discontinuity threshold.
   Points in window on the far side of a relative discontinuity are marked as invalid
-  since they may be occluded by a small sensor movement
+  since they may be occluded by a small sensor movement.
 
- - ```ang_inc_thresh``` - ```float```, default ```M_PI_2```
+- ```ang_inc_thresh``` - ```float```, default ```M_PI_2```
 
-  Max angle of ray w.r.t. Y-Z plane [rad] (between 0 and PI / 2)
-  A small angle indicates that the surface is facing the lidar
-  Points with high angle angle on both sides are marked as ineligible
+  Max angle of ray w.r.t. Y-Z plane [rad] (between 0 and PI / 2).
+  A small angle indicates that the surface is facing the lidar.
+  Points with high angle angle on both sides are marked as ineligible.
 
- - ```max_angle``` - ```float```, default ```M_PI```
+- ```max_angle``` - ```float```, default ```M_PI```
 
-  Max angle w.r.t. lidar x axis [rad] (between 0 and PI)
-  Points with larger angle w.r.t. lidar center are marked as ineligible
+  Max angle w.r.t. lidar x axis [rad] (between 0 and PI).
+  Points with larger angle w.r.t. lidar center are marked as ineligible.
 
-  - ```min_depth```, ```max_depth```, ```float```, default ```0``` and ```MAX_FLOAT```
+- ```min_depth```, ```max_depth```, ```float```, default ```0``` and ```MAX_FLOAT```
 
-  Min and max distance from sensor for valid features
+  Min and max distance from sensor for valid features.
 
-  - ```min_intensity```, ```max_intensity```, ```float```, default ```0``` and ```MAX_FLOAT```
+- ```min_intensity```, ```max_intensity```, ```float```, default ```0``` and ```MAX_FLOAT```
 
-  Intensity range for valid points
+  Intensity range for valid points.
 
-  - ```plane_thresh``` - ```float```, default ```2e-4```
+- ```plane_thresh``` - ```float```, default ```2e-4```
 
-  Upper cvalue threshold for planar features
+  Upper cvalue threshold for planar features.
 
-  - ```edge_thresh``` - ```float```, default ```1e-2```
+- ```edge_thresh``` - ```float```, default ```1e-2```
 
-  Lower cvalue threshold for edge features
+  Lower cvalue threshold for edge features.
 
 
 ## PclSegComponent
@@ -115,23 +117,23 @@ Non-returns are re-published.
 
 ### Subscribes to
 
- - ```pointcloud``` - ```sensor_msgs/msg/PointCloud2```
+- ```pointcloud``` - ```sensor_msgs/msg/PointCloud2```
 
- - ```segmentation``` - ```sensor_msgs/msg/Image```
+- ```segmentation``` - ```sensor_msgs/msg/Image```
 
   Must be an image of type MONO8 where the pixel value is the segmentation class.
 
- - ```calibration ``` - ```sensor_msgs/msg/CameraInfo```
+- ```calibration ``` - ```sensor_msgs/msg/CameraInfo```
 
 ### Publishes to
 
- - ```pointcloud_filtered``` - ```sensor_msgs/msg/PointCloud2```
+- ```pointcloud_filtered``` - ```sensor_msgs/msg/PointCloud2```
 
 ### Parameters
 
- - ```classes``` - ```int[]```, default ```{0}```
+- ```classes``` - ```int[]```, default ```{0}```
 
- The segmentation classes to re-publish.
+  The segmentation classes to re-publish.
 
 
 ## PclImageOverlayComponent
@@ -142,22 +144,22 @@ Point colors are determined by the distance from the camera.
 
 ### Subscribes to
 
- - ```pointcloud``` - ```sensor_msgs/msg/PointCloud2```
+- ```pointcloud``` - ```sensor_msgs/msg/PointCloud2```
 
- - ```image``` - ```sensor_msgs/msg/Image```
+- ```image``` - ```sensor_msgs/msg/Image```
 
   Must be an image of type RGB8
 
- - ```calibration ``` - ```sensor_msgs/msg/CameraInfo```
+- ```calibration ``` - ```sensor_msgs/msg/CameraInfo```
 
 ### Publishes to
 
- - ```image_overlay``` - ```sensor_msgs/msg/Image```
+- ```image_overlay``` - ```sensor_msgs/msg/Image```
 
 ### Parameters
 
- - ```max_size``` - ```int```, default ```10000```
-
+- ```max_size``` - ```int```, default ```10000```
+ 
   Maximal number of points to collect while waiting for the next image
 
 - ```cmap_min, cmap_max``` - ```double```, default 2 and 20
