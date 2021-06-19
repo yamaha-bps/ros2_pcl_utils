@@ -2,11 +2,10 @@
 // MIT License
 // https://github.com/yamaha-bps/ros2_pcl_utils/blob/master/LICENSE
 
-#ifndef PCL_UTILS__PCL_SEG_COMPONENT_HPP_
-#define PCL_UTILS__PCL_SEG_COMPONENT_HPP_
+#ifndef PCL_UTILS__PCL_SEG_NODE_HPP_
+#define PCL_UTILS__PCL_SEG_NODE_HPP_
 
 #include <boost/circular_buffer.hpp>
-
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
@@ -19,11 +18,11 @@
 namespace cbr
 {
 
-class PclSegComponent : public rclcpp::Node
+class PclSegNode : public rclcpp::Node
 {
 public:
-  explicit PclSegComponent(const rclcpp::NodeOptions & opts);
-  ~PclSegComponent();
+  explicit PclSegNode(const rclcpp::NodeOptions & opts);
+  ~PclSegNode();
 
 private:
   rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr sub_pcl_;
@@ -49,4 +48,4 @@ private:
 
 }  // namespace cbr
 
-#endif  // PCL_UTILS__PCL_SEG_COMPONENT_HPP_
+#endif  // PCL_UTILS__PCL_SEG_NODE_HPP_

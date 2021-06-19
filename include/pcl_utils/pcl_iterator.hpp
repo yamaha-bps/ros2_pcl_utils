@@ -2,12 +2,11 @@
 // MIT License
 // https://github.com/yamaha-bps/ros2_pcl_utils/blob/master/LICENSE
 
-#ifndef PCL_ITERATOR_HPP_
-#define PCL_ITERATOR_HPP_
-
-#include <sensor_msgs/msg/point_cloud2.hpp>
+#ifndef PCL_UTILS__PCL_ITERATOR_HPP_
+#define PCL_UTILS__PCL_ITERATOR_HPP_
 
 #include <Eigen/Core>
+#include <sensor_msgs/msg/point_cloud2.hpp>
 
 #include <cstdint>
 
@@ -75,4 +74,4 @@ struct PclIterator
   uint8_t const * data_ptr_;
 };
 
-#endif  // PCL_ITERATOR_HPP_
+#endif  // PCL_UTILS__PCL_ITERATOR_HPP_

@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-#include "pcl_iterator.hpp"
+#include "pcl_utils/pcl_iterator.hpp"
 
 
 namespace cbr

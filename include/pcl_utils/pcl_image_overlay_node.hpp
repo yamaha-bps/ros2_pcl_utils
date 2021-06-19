@@ -2,8 +2,8 @@
 // MIT License
 // https://github.com/yamaha-bps/ros2_pcl_utils/blob/master/LICENSE
 
-#ifndef PCL_UTILS__PCL_IMAGE_OVERLAY_COMPONENT_HPP_
-#define PCL_UTILS__PCL_IMAGE_OVERLAY_COMPONENT_HPP_
+#ifndef PCL_UTILS__PCL_IMAGE_OVERLAY_NODE_HPP_
+#define PCL_UTILS__PCL_IMAGE_OVERLAY_NODE_HPP_
 
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
@@ -21,11 +21,11 @@
 namespace cbr
 {
 
-class PclImageOverlayComponent : public rclcpp::Node
+class PclImageOverlayNode : public rclcpp::Node
 {
 public:
-  explicit PclImageOverlayComponent(const rclcpp::NodeOptions & opts);
-  ~PclImageOverlayComponent();
+  explicit PclImageOverlayNode(const rclcpp::NodeOptions & opts);
+  ~PclImageOverlayNode();
 
 private:
   rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr sub_calib_;
@@ -47,4 +47,4 @@ private:
 
 }  // namespace cbr
 
-#endif  // PCL_UTILS__PCL_IMAGE_OVERLAY_COMPONENT_HPP_
+#endif  // PCL_UTILS__PCL_IMAGE_OVERLAY_NODE_HPP_

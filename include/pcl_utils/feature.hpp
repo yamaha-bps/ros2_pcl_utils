@@ -62,11 +62,8 @@ struct PclFeatureParams
  * @param prm parameters
  * @return edge and planar feature pointclouds
  */
-std::pair<sensor_msgs::msg::PointCloud2::UniquePtr,
-  sensor_msgs::msg::PointCloud2::UniquePtr>
-pcl_features(
-  const sensor_msgs::msg::PointCloud2 & msg,
-  const PclFeatureParams & prm);
+std::pair<sensor_msgs::msg::PointCloud2::UniquePtr, sensor_msgs::msg::PointCloud2::UniquePtr>
+pcl_features(const sensor_msgs::msg::PointCloud2 & msg, const PclFeatureParams & prm);
 
 }  // namespace cbr
 

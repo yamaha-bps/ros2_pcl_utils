@@ -12,6 +12,8 @@
 #include <unordered_set>
 #include <vector>
 
+#include "pcl_utils/camera.hpp"
+
 namespace cbr
 {
 
