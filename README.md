@@ -1,34 +1,64 @@
 # ```ros2_pcl_utils```
+
 [![foxy](https://github.com/yamaha-bps/ros2_pcl_utils/actions/workflows/foxy.yaml/badge.svg)](https://github.com/yamaha-bps/ros2_pcl_utils/actions/workflows/foxy.yaml) [![galactic](https://github.com/yamaha-bps/ros2_pcl_utils/actions/workflows/galactic.yaml/badge.svg)](https://github.com/yamaha-bps/ros2_pcl_utils/actions/workflows/galactic.yaml)
 
-ROS2 nodes for pointcloud manipulation:
+## Installation
 
-* ```PclFeatureComponent```: Extract edge and planar features
-* ```PclSegComponent```: Filter a pointcloud with respect to a segmentation image
-* ```PclImageOverlayComponent```: Project a pointcloud onto an image
+Clone into a ```colcon``` workspace and build as usual.
 
-The nodes assume that the incoming pointclouds have the XYZI structure.
+```
+git clone https://github.com/yamaha-bps/ros2_pcl_utils.git src/pcl_utils 
+colcon build
+```
 
-Points with negative intensity are assumed to be non-returns.
+## Usage
+
+Nodes can be started directly as standalone executables,
+```
+ros2 run pcl_utils feature_node         # executable for PclFeatureNode
+ros2 run pcl_utils seg_node             # executable for PclSegNode
+ros2 run pcl_utils image_overlay_node   # executable for PclImageOverlayNode
+```
+or by loading them in a container:
+```
+# start container
+ros2 run rclcpp_components component_container --ros-args -r __node:=my_container
+# load nodes into container
+ros2 component load /my_container pcl_utils cbr::PclFeatureNode
+ros2 component load /my_container pcl_utils cbr::PclSegNode
+ros2 component load /my_container pcl_utils cbr::PclImageOverlayNode
+```
 
 ## Example
 
 These images are from the ```launch/demo.launch.py``` example.
 
+To run the demo:
+```
+source /usr/share/gazebo/setup.sh  # may be required by gazebo
+ros2 launch pcl_utils demo.launch.py
+```
+
 Consider this gazebo scene with one camera and one lidar viewing two objects:
 
 <img src="images/scene.png" width="500">
 
-The ```PclFeatureComponent``` extracts edge and planar features from the lidar pointcloud. The first image shows
-the raw pointcloud, and the second shows features extracted by ```PclFeatureComponent```.
+The ```PclFeatureNode``` extracts edge and planar features from the lidar pointcloud. The first image shows
+the raw pointcloud, and the second shows features extracted by ```PclFeatureNode```.
 
 <img src="images/pcl.png" width="400"> <img src="images/features.png" width="400">
 
-The ```PclImageOverlayComponent``` projects a pointcloud onto an image.
+The ```PclImageOverlayNode``` projects a pointcloud onto an image.
 
 <img src="images/image.png" width="400"> <img src="images/overlay.png" width="400">
 
-## ```PclFeatureComponent```
+## Nodes
+
+The nodes assume that the incoming pointclouds have the XYZI structure.
+
+Points with negative intensity are assumed to be non-returns.
+
+### ```cbr::PclFeatureNode```
 
 Extracts edge and planar features from a pointcloud.
 
@@ -51,16 +81,16 @@ planar surface, while high c-values are indicative of an edge.
 
 ![](images/equation.png)
 
-### Subscribes to
+#### Subscribes to
 
 - ```pointcloud``` - ```sensor_msgs/msg/PointCloud2```
 
-### Publishes to
+#### Publishes to
 
 - ```feature/plane``` - ```sensor_msgs/msg/PointCloud2```
 - ```feature/edge``` - ```sensor_msgs/msg/PointCloud2```
 
-### Parameters
+#### Parameters
 
 - ```window``` - ```int```, default ```5```
 
@@ -107,15 +137,15 @@ planar surface, while high c-values are indicative of an edge.
   Lower cvalue threshold for edge features.
 
 
-## PclSegComponent
+### ```cbr::PclSegNode```
 
 Filters an incoming pointcluod w.r.t. a segmentation mask. Only points that
 project inside the image to a pixel that is in one of the specified segmentation classes
 are re-published.
 
-Non-returns are re-published.
+Non-returns (negative intensity) are re-published.
 
-### Subscribes to
+#### Subscribes to
 
 - ```pointcloud``` - ```sensor_msgs/msg/PointCloud2```
 
@@ -125,24 +155,24 @@ Non-returns are re-published.
 
 - ```calibration ``` - ```sensor_msgs/msg/CameraInfo```
 
-### Publishes to
+#### Publishes to
 
 - ```pointcloud_filtered``` - ```sensor_msgs/msg/PointCloud2```
 
-### Parameters
+#### Parameters
 
 - ```classes``` - ```int[]```, default ```{0}```
 
   The segmentation classes to re-publish.
 
 
-## PclImageOverlayComponent
+### ```cbr::PclImageOverlayNode```
 
 Projects a pointcloud onto an image as drawn circles and re-publishes the image. Useful for calibration verification.
 
 Point colors are determined by the distance from the camera.
 
-### Subscribes to
+#### Subscribes to
 
 - ```pointcloud``` - ```sensor_msgs/msg/PointCloud2```
 
@@ -152,11 +182,11 @@ Point colors are determined by the distance from the camera.
 
 - ```calibration ``` - ```sensor_msgs/msg/CameraInfo```
 
-### Publishes to
+#### Publishes to
 
 - ```image_overlay``` - ```sensor_msgs/msg/Image```
 
-### Parameters
+#### Parameters
 
 - ```max_size``` - ```int```, default ```10000```
  

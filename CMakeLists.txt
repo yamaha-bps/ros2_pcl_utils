@@ -16,35 +16,30 @@ find_package(tf2_ros REQUIRED)
 
 find_package(Boost REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED imgproc)
 
 # ---------------------------------------------------------------------------------------
 # TARGETS
 # ---------------------------------------------------------------------------------------
 
-# Library
-
-add_library(${PROJECT_NAME}_lib SHARED
+add_library(${PROJECT_NAME} SHARED
   src/filter.cpp
   src/feature.cpp
 )
-target_include_directories(${PROJECT_NAME}_lib
+target_include_directories(${PROJECT_NAME}
 PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  ${sensor_msgs_INCLUDE_DIRS}
 )
-target_link_libraries(${PROJECT_NAME}_lib
+target_link_libraries(${PROJECT_NAME}
 PUBLIC
   Eigen3::Eigen
-  ${sensor_msgs_LIBRARIES}
+  sensor_msgs::sensor_msgs__rosidl_typesupport_cpp
 )
-target_compile_options(${PROJECT_NAME}_lib
+target_compile_options(${PROJECT_NAME}
 PRIVATE
   -Wall -Wextra -Wpedantic -Werror
 )
-
-# Components
 
 add_library(${PROJECT_NAME}_nodes SHARED
   src/pcl_image_overlay_node.cpp
@@ -57,15 +52,14 @@ PUBLIC
   $<INSTALL_INTERFACE:include>
 PRIVATE
   ${OpenCV_INCLUDE_DIRS}
-)
-ament_target_dependencies(${PROJECT_NAME}_nodes
-  rclcpp
-  rclcpp_components
-  tf2_ros
+  ${rclcpp_components_INCLUDE_DIR}
 )
 target_link_libraries(${PROJECT_NAME}_nodes
+PRIVATE
+  rclcpp::rclcpp
+  tf2_ros::tf2_ros
   ${OpenCV_LIBRARIES}
-  ${PROJECT_NAME}_lib
+  ${PROJECT_NAME}
 )
 target_compile_options(${PROJECT_NAME}_nodes
 PRIVATE
@@ -73,36 +67,36 @@ PRIVATE
 )
 
 rclcpp_components_register_node(${PROJECT_NAME}_nodes
-  PLUGIN "cbr::PclSegNode"
-  EXECUTABLE seg_node
+  PLUGIN      "cbr::PclSegNode"
+  EXECUTABLE  seg_node
 )
 rclcpp_components_register_node(${PROJECT_NAME}_nodes
-  PLUGIN "cbr::PclImageOverlayNode"
-  EXECUTABLE image_overlay_node
+  PLUGIN      "cbr::PclImageOverlayNode"
+  EXECUTABLE  image_overlay_node
 )
 rclcpp_components_register_node(${PROJECT_NAME}_nodes
-  PLUGIN "cbr::PclFeatureNode"
-  EXECUTABLE feature_node
+  PLUGIN      "cbr::PclFeatureNode"
+  EXECUTABLE  feature_node
 )
 
 # ---------------------------------------------------------------------------------------
 # INSTALLATION
 # ---------------------------------------------------------------------------------------
 
-install(TARGETS
-  ${PROJECT_NAME}_lib ${PROJECT_NAME}_nodes
-  EXPORT export_${PROJECT_NAME}
-  DESTINATION lib
+install(
+  TARGETS               ${PROJECT_NAME} ${PROJECT_NAME}_nodes
+  EXPORT                ${PROJECT_NAME}_targets
+  ARCHIVE DESTINATION   lib
+  LIBRARY DESTINATION   lib
 )
 
 install(
-  DIRECTORY include/
-  DESTINATION include
+  DIRECTORY     include
 )
 
 install(
-  DIRECTORY launch gazebo
-  DESTINATION share/${PROJECT_NAME}/
+  DIRECTORY     launch gazebo
+  DESTINATION   share/${PROJECT_NAME}
 )
 
 # ---------------------------------------------------------------------------------------
@@ -115,23 +109,22 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(ament_cmake_gtest REQUIRED)
-  ament_add_gtest(test_filter
-    test/test_filter.cpp
-  )
-  target_link_libraries(test_filter ${PROJECT_NAME}_lib)
-  ament_add_gtest(test_feature
-    test/test_feature.cpp
-  )
+  ament_add_gtest(test_filter test/test_filter.cpp)
+  target_link_libraries(test_filter ${PROJECT_NAME})
+
+  ament_add_gtest(test_feature test/test_feature.cpp)
 
   find_package(launch_testing_ament_cmake)
   add_launch_test(test/bringup.test.py TIMEOUT 60)
 
-  target_link_libraries(test_feature ${PROJECT_NAME}_lib)
+  target_link_libraries(test_feature ${PROJECT_NAME})
 endif()
 
 # ---------------------------------------------------------------------------------------
 # CMAKE CONFIGURATION
 # ---------------------------------------------------------------------------------------
+
+ament_export_targets(${PROJECT_NAME}_targets)
 
 ament_package()
 
