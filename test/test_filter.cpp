@@ -173,7 +173,7 @@ TEST_F(ProjectionTest, AllQuadrants) {
 
   ASSERT_EQ(copy.size(), pcl.data.size());
 
-  for (int i = 0u; i != copy.size(); ++i) {
+  for (auto i = 0u; i != copy.size(); ++i) {
     ASSERT_EQ(copy[i], pcl.data[i]);
   }
 }

@@ -109,10 +109,14 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(ament_cmake_gtest REQUIRED)
+
+  add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+
   ament_add_gtest(test_filter test/test_filter.cpp)
   target_link_libraries(test_filter ${PROJECT_NAME})
 
   ament_add_gtest(test_feature test/test_feature.cpp)
+  target_link_libraries(test_feature ${PROJECT_NAME})
 
   find_package(launch_testing_ament_cmake)
   add_launch_test(test/bringup.test.py TIMEOUT 60)
