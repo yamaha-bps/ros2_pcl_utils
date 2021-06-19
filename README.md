@@ -140,7 +140,7 @@ planar surface, while high c-values are indicative of an edge.
 ### ```cbr::PclSegNode```
 
 Filters an incoming pointcluod w.r.t. a segmentation mask. Only points that
-project inside the image to a pixel that is in one of the specified segmentation classes
+project to a pixel that is in one of the specified segmentation classes
 are re-published.
 
 Non-returns (negative intensity) are re-published.
@@ -153,7 +153,7 @@ Non-returns (negative intensity) are re-published.
 
   Must be an image of type MONO8 where the pixel value is the segmentation class.
 
-- ```calibration ``` - ```sensor_msgs/msg/CameraInfo```
+- ```camera_info ``` - ```sensor_msgs/msg/CameraInfo```
 
 #### Publishes to
 
@@ -180,7 +180,7 @@ Point colors are determined by the distance from the camera.
 
   Must be an image of type RGB8
 
-- ```calibration ``` - ```sensor_msgs/msg/CameraInfo```
+- ```camera_info ``` - ```sensor_msgs/msg/CameraInfo```
 
 #### Publishes to
 

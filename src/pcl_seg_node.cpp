@@ -79,12 +79,12 @@ PclSegNode::PclSegNode(const rclcpp::NodeOptions & opts)
     std::bind(&PclSegNode::cb_img_, this, std::placeholders::_1));
 
   sub_calib_ = create_subscription<sensor_msgs::msg::CameraInfo>(
-    "calibration", rclcpp::SystemDefaultsQoS(),
+    "camera_info", rclcpp::SystemDefaultsQoS(),
     [this](const sensor_msgs::msg::CameraInfo::SharedPtr msg) {
       if (!pImpl->calib_received_) {
         pImpl->calib = *msg;
         pImpl->calib_received_ = true;
-        RCLCPP_INFO(get_logger(), "Received calibration");
+        RCLCPP_INFO(get_logger(), "Received camera info");
       }
     });
 
@@ -116,7 +116,7 @@ void PclSegNode::cb_pcl_(sensor_msgs::msg::PointCloud2::UniquePtr msg)
   if (!pImpl->calib_received_) {
     RCLCPP_INFO_THROTTLE(
       get_logger(), *get_clock(), 3000,
-      "Waiting for calibration");
+      "Waiting for camera info");
     return;
   }
 
@@ -214,7 +214,7 @@ void PclSegNode::work()
     if (!pImpl->calib_received_) {
       RCLCPP_WARN_THROTTLE(
         get_logger(), *get_clock(), 3000,
-        "Waiting for calibration");
+        "Waiting for camera info");
       continue;
     }
 
