@@ -1,3 +1,7 @@
+# Copyright Yamaha 2021
+# MIT License
+# https://github.com/yamaha-bps/ros2_pcl_utils/blob/master/LICENSE
+
 from os.path import join
 
 from ament_index_python.packages import get_package_share_directory

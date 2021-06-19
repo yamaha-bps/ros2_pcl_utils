@@ -1,3 +1,7 @@
+# Copyright Yamaha 2021
+# MIT License
+# https://github.com/yamaha-bps/ros2_pcl_utils/blob/master/LICENSE
+
 cmake_minimum_required(VERSION 3.15)
 project(pcl_utils VERSION 0.1.0)
 

@@ -5,7 +5,8 @@
   <version>0.1.0</version>
   <description>ROS2 nodes for pointcloud manipulation</description>
   <maintainer email="pettni@umich.edu">Petter Nilsson</maintainer>
-  <license>MIT License</license>
+
+  <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

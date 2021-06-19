@@ -1,4 +1,7 @@
-// Copyright 2020 Yamaha Motor Corporation, USA
+// Copyright Yamaha 2021
+// MIT License
+// https://github.com/yamaha-bps/ros2_pcl_utils/blob/master/LICENSE
+
 #ifndef PCL_UTILS__PCL_SEG_COMPONENT_HPP_
 #define PCL_UTILS__PCL_SEG_COMPONENT_HPP_
 

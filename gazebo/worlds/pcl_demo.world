@@ -1,3 +1,7 @@
+ <!-- Copyright Yamaha 2021 -->
+ <!-- MIT License -->
+ <!-- https://github.com/yamaha-bps/ros2_pcl_utils/blob/master/LICENSE -->
+
 <?xml version="1.0"?>
 <sdf version="1.7">
   <world name="camera_test">
