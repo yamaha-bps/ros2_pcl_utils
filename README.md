@@ -6,7 +6,7 @@
 
 Clone into a ```colcon``` workspace and build as usual.
 
-```
+```bash
 git clone https://github.com/yamaha-bps/ros2_pcl_utils.git src/pcl_utils 
 colcon build
 ```
@@ -14,13 +14,13 @@ colcon build
 ## Usage
 
 Nodes can be started directly as standalone executables,
-```
+```bash
 ros2 run pcl_utils feature_node         # executable for PclFeatureNode
 ros2 run pcl_utils seg_node             # executable for PclSegNode
 ros2 run pcl_utils image_overlay_node   # executable for PclImageOverlayNode
 ```
 or by loading them in a container:
-```
+```bash
 # start container
 ros2 run rclcpp_components component_container --ros-args -r __node:=my_container
 # load nodes into container
@@ -34,7 +34,7 @@ ros2 component load /my_container pcl_utils cbr::PclImageOverlayNode
 These images are from the ```launch/demo.launch.py``` example.
 
 To run the demo:
-```
+```bash
 source /usr/share/gazebo/setup.sh  # may be required by gazebo
 ros2 launch pcl_utils demo.launch.py
 ```
