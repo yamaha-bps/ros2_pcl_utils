@@ -122,6 +122,10 @@ if(BUILD_TESTING)
   ament_add_gtest(test_feature
     test/test_feature.cpp
   )
+
+  find_package(launch_testing_ament_cmake)
+  add_launch_test(test/bringup.test.py TIMEOUT 60)
+
   target_link_libraries(test_feature ${PROJECT_NAME}_lib)
 endif()
 
