@@ -199,4 +199,3 @@ Point colors are determined by the distance from the camera.
 - ```draw_radius``` - ```int```, default ```2```
 
   Circle size
->>>>>>> Pcl image overlay
