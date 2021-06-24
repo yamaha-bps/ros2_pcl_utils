@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>pcl_utils</name>
+  <version>0.1.0</version>
+  <description>ROS2 nodes for pointcloud manipulation</description>
+  <maintainer email="pettni@umich.edu">Petter Nilsson</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <build_depend>eigen</build_depend>
+  <build_depend>libboost-dev</build_depend>
+  <build_depend>libopencv-dev</build_depend>
+  <build_depend>rclcpp</build_depend>
+  <build_depend>rclcpp_components</build_depend>
+  <build_depend>tf2_ros</build_depend>
+
+  <depend>sensor_msgs</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+    <gazebo_ros gazebo_media_path="${prefix}/gazebo" />
+  </export>
+</package>
